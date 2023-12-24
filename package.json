@@ -3,7 +3,15 @@
   "version": "0.1.0",
   "description": "A workout tracker for logging gym routines.",
   "main": "index.js",
-  "scripts": {},
+  "scripts": {
+    "dev": "astro dev",
+    "start": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview"
+  },
   "keywords": [],
-  "author": "Brendan Beltz"
+  "author": "Brendan Beltz",
+  "dependencies": {
+    "astro": "^4.0.7"
+  }
 }
