@@ -1,0 +1,9 @@
+{
+  "name": "gym-log-workout-tracker",
+  "version": "0.1.0",
+  "description": "A workout tracker for logging gym routines.",
+  "main": "index.js",
+  "scripts": {},
+  "keywords": [],
+  "author": "Brendan Beltz"
+}
