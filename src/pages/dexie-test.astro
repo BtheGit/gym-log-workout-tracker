@@ -1,0 +1,104 @@
+---
+
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dexie Test</title>
+  </head>
+  <body>
+    <h1>Dexie Test</h1>
+
+    <button id="add-button">Add</button>
+    <button id="delete-button">Delete</button>
+    <script>
+      import Dexie from "dexie";
+      import { exportDB } from "dexie-export-import";
+
+      type Exercise = {
+        id?: number;
+        name: string;
+        description: string;
+      };
+
+      class MyDatabase extends Dexie {
+        exercises: Dexie.Table<Exercise, number>;
+
+        constructor() {
+          super("MyDatabase");
+
+          this.version(1).stores({
+            exercises: "++id,name,description",
+          });
+
+          this.exercises = this.table("exercises");
+
+          this.deleteAllExercises();
+          this.addExercise({
+            name: "Pushups",
+            description: "Pushups are a common calisthenics exercise.",
+          });
+        }
+
+        async addExercise(exercise: Exercise) {
+          await this.exercises.add(exercise);
+        }
+
+        async getExercise(id: number) {
+          return await this.exercises.get(id);
+        }
+
+        async getAllExercises() {
+          return await this.exercises.toArray();
+        }
+
+        async updateExercise(exercise: Exercise) {
+          await this.exercises.update(exercise.id!, exercise);
+        }
+
+        async deleteExercise(id: number) {
+          await this.exercises.delete(id);
+        }
+
+        async deleteAllExercises() {
+          await this.exercises.clear();
+        }
+      }
+
+      const db = new MyDatabase();
+
+      const syncDB = async () => {
+        console.log(await db.getAllExercises());
+        const blob = await exportDB(db);
+        console.log(blob.size);
+
+        // Question: Is there a UUID per blob so that we know whether we should update or not?
+      };
+
+      const addButton = document.getElementById("add-button");
+      addButton!.addEventListener("click", async () => {
+        await db.addExercise({
+          // Generate a random name and description.
+          name: Math.random().toString(36).substring(7),
+          description: Math.random().toString(36).substring(7),
+        });
+
+        syncDB();
+      });
+
+      const deleteButton = document.getElementById("delete-button");
+      deleteButton!.addEventListener("click", async () => {
+        const allExercises = await db.getAllExercises();
+
+        await db.deleteExercise(
+          allExercises[Math.floor(Math.random() * allExercises.length)].id!
+        );
+
+        syncDB();
+      });
+    </script>
+  </body>
+</html>

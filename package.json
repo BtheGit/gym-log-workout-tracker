@@ -12,6 +12,10 @@
   "keywords": [],
   "author": "Brendan Beltz",
   "dependencies": {
-    "astro": "^4.0.7"
+    "astro": "^4.0.7",
+    "dexie": "^3.2.4",
+    "dexie-export-import": "^4.0.7",
+    "google-auth-library": "^9.4.1",
+    "googleapis": "^129.0.0"
   }
 }

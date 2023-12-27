@@ -1,0 +1,511 @@
+---
+// TODO: Persist auth as log as possible
+// TODO: What permissions?
+// TODO: Pass in secrets
+// TODO: Figure out rate limiting for updates (read and write)
+// TODO: Test PouchDB
+// TODO: Create a util for syncing DB to file to drive and back
+---
+
+<!doctype html>
+<html>
+  <head>
+    <title>Drive API Quickstart</title>
+    <meta charset="utf-8" />
+  </head>
+  <body>
+    <h2>Google Authentication</h2>
+
+    <!--Add buttons to initiate auth sequence and sign out-->
+    <button id="authorize_button" onclick="handleAuthClick()">Authorize</button>
+    <button id="signout_button" onclick="handleSignoutClick()">Sign Out</button>
+    <button id="refresh_button" onclick="listFiles()" disabled="true"
+      >Refresh</button
+    >
+
+    <pre id="content" style="white-space: pre-wrap"></pre>
+
+    <h2>Dexie Test</h2>
+
+    <button id="add-button">Add</button>
+    <button id="delete-button">Delete</button>
+
+    <h2>Drive Test</h2>
+
+    <button id="find-vault">Find Vault</button>
+    <button id="create-vault">Create Vault</button>
+    <button id="update-vault">Update Vault</button>
+    <script>
+      const CLIENT_ID = import.meta.env.PUBLIC_DRIVE_CLIENT_ID;
+      const API_KEY = import.meta.env.PUBLIC_DRIVE_API_KEY;
+
+      (window as any).CLIENT_ID = CLIENT_ID;
+      (window as any).API_KEY = API_KEY;
+    </script>
+    <script type="text/javascript">
+      // Discovery doc URL for APIs used by the quickstart
+      const DISCOVERY_DOC =
+        "https://www.googleapis.com/discovery/v1/apis/drive/v3/rest";
+
+      // Authorization scopes required by the API; multiple scopes can be
+      // included, separated by spaces.
+      // const SCOPES = "https://www.googleapis.com/auth/drive.file";
+      const SCOPES = "https://www.googleapis.com/auth/drive.appdata";
+
+      let tokenClient;
+      let gapiInited = false;
+      let gisInited = false;
+
+      document.getElementById("authorize_button").style.visibility = "hidden";
+      document.getElementById("signout_button").style.visibility = "hidden";
+
+      /**
+       * Callback after api.js is loaded.
+       */
+      function gapiLoaded() {
+        gapi.load("client", initializeGapiClient);
+      }
+
+      /**
+       * Callback after the API client is loaded. Loads the
+       * discovery doc to initialize the API.
+       */
+      async function initializeGapiClient() {
+        await gapi.client.init({
+          apiKey: API_KEY,
+          discoveryDocs: [DISCOVERY_DOC],
+        });
+        gapiInited = true;
+        maybeEnableButtons();
+      }
+
+      /**
+       * Callback after Google Identity Services are loaded.
+       */
+      function gisLoaded() {
+        tokenClient = google.accounts.oauth2.initTokenClient({
+          client_id: CLIENT_ID,
+          scope: SCOPES,
+          callback: "", // defined later
+        });
+        gisInited = true;
+        maybeEnableButtons();
+      }
+
+      /**
+       * Enables user interaction after all libraries are loaded.
+       */
+      function maybeEnableButtons() {
+        if (gapiInited && gisInited) {
+          document.getElementById("authorize_button").style.visibility =
+            "visible";
+        }
+      }
+
+      /**
+       *  Sign in the user upon button click.
+       */
+      function handleAuthClick() {
+        tokenClient.callback = async (resp) => {
+          if (resp.error !== undefined) {
+            throw resp;
+          }
+          document.getElementById("signout_button").style.visibility =
+            "visible";
+          document.getElementById("refresh_button").disabled = false;
+        };
+
+        if (gapi.client.getToken() === null) {
+          // Prompt the user to select a Google Account and ask for consent to share their data
+          // when establishing a new session.
+          tokenClient.requestAccessToken({ prompt: "consent" });
+        } else {
+          // Skip display of account chooser and consent dialog for an existing session.
+          tokenClient.requestAccessToken({ prompt: "" });
+        }
+      }
+
+      /**
+       *  Sign out the user upon button click.
+       */
+      function handleSignoutClick() {
+        const token = gapi.client.getToken();
+        if (token !== null) {
+          google.accounts.oauth2.revoke(token.access_token);
+          gapi.client.setToken("");
+          document.getElementById("content").innerText = "";
+          document.getElementById("authorize_button").innerText = "Authorize";
+          document.getElementById("signout_button").style.visibility = "hidden";
+        }
+      }
+
+      /**
+       * Print metadata for first 10 files.
+       */
+      async function listFiles() {
+        let response;
+        try {
+          response = await gapi.client.drive.files.list({
+            pageSize: 10,
+            fields: "files(id, name)",
+          });
+        } catch (err) {
+          document.getElementById("content").innerText = err.message;
+          return;
+        }
+        const files = response.result.files;
+        if (!files || files.length == 0) {
+          document.getElementById("content").innerText = "No files found.";
+          return;
+        }
+        // Flatten to string to display
+        const output = files.reduce(
+          (str, file) => `${str}${file.name} (${file.id})\n`,
+          "Files:\n"
+        );
+        document.getElementById("content").innerText = output;
+      }
+
+      // https://stackoverflow.com/a/68702408
+      async function uploadFile(blob, name, mimeType, parents = ["root"]) {
+        const metadata = { name, mimeType, parents };
+        const form = new FormData();
+        form.append(
+          "metadata",
+          new Blob([JSON.stringify(metadata)], { type: "application/json" })
+        );
+        form.append("file", blob);
+        return fetch(
+          "https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart&supportsAllDrives=true",
+          {
+            method: "POST",
+            headers: new Headers({
+              Authorization: `Bearer ${gapi.auth.getToken().access_token}`,
+            }),
+            body: form,
+          }
+        );
+      }
+
+      async function updateFile(
+        fileId,
+        body,
+        blob,
+        name,
+        mimeType,
+        parents = ["root"]
+      ) {
+        // const metadata = { name, mimeType, parents };
+        // const form = new FormData();
+        // form.append(
+        //   "metadata",
+        //   new Blob([JSON.stringify(metadata)], { type: "application/json" })
+        // );
+        // form.append("file", blob);
+        return fetch(
+          `https://www.googleapis.com/upload/drive/v3/files/${fileId}?uploadType=multipart&supportsAllDrives=true`,
+          {
+            method: "PATCH",
+            headers: new Headers({
+              Authorization: `Bearer ${gapi.auth.getToken().access_token}`,
+            }),
+            body,
+          }
+        );
+      }
+
+      const vaultFolderName = "test";
+      const vaultFileName = "vault.json";
+
+      // If a vault doesn't exist, create a new one.
+      // We will use the folder test in google drive vault.json file
+      async function createVault() {
+        // First, let's try and find the existing vault.
+
+        const existingVault = await findVault();
+        if (existingVault) {
+          console.log("Vault found");
+          return;
+        }
+
+        // NOTE: Freezing because appData is a special folder
+        // The vault doesn't exist, but does the folder?
+        // let existingFolder = await getFolder();
+        // if (!existingFolder) {
+        //   // The folder doesn't exist, create it.
+        //   console.log("Folder not found");
+        //   existingFolder = await createFolder();
+        // } else {
+        //   console.log("Existing folder found");
+        // }
+
+        // console.log(existingFolder);
+
+        // If we didn't find an existing vault, create a new one.
+        // const fileMetadata = {
+        //   name: vaultFileName,
+        //   fields: "id",
+        //   parents: [existingFolder.id],
+        // };
+        // const fileMedia = {
+        //   mimeType: "	application/json",
+        //   body: new Blob([JSON.stringify({})], {
+        //     type: "application/json",
+        //   }).stream(),
+        // };
+
+        try {
+          // const response = await gapi.client.drive.files.create({
+          //   resource: fileMetadata,
+          //   media: fileMedia,
+          //   fields: "id",
+          // });
+          const response = await uploadFile(
+            new Blob([JSON.stringify({})], {
+              type: "application/json",
+            }),
+            vaultFileName,
+            "application/json",
+            ["appDataFolder"]
+            // [existingFolder.id]
+          );
+          console.log(response);
+        } catch (err) {
+          console.error(err);
+        }
+      }
+
+      async function createFolder() {
+        console.log("Creating folder");
+        const fileMetadata = {
+          name: vaultFolderName,
+          mimeType: "application/vnd.google-apps.folder",
+        };
+        const response = await gapi.client.drive.files.create({
+          resource: fileMetadata,
+          fields: "id",
+        });
+        return response.result;
+      }
+
+      async function getFolder() {
+        const response = await gapi.client.drive.files.list({
+          q: `name = '${vaultFolderName}' and mimeType = 'application/vnd.google-apps.folder'`,
+        });
+
+        // const response = await gapi.client.drive.files.list({
+        //   q: `name = '${vaultFolderName}' and 'appDataFolder' in parents`,
+        //   pageSize: 10,
+        //   fields: "files(id, name)",
+        // });
+
+        const files = response.result.files;
+        if (!files || files.length == 0) {
+          return null;
+        }
+
+        return files[0];
+      }
+
+      async function findVault() {
+        try {
+          const response = await gapi.client.drive.files.list({
+            spaces: "appDataFolder",
+            q: `name = '${vaultFileName}'`,
+            pageSize: 10,
+            fields: "files(id, name)",
+          });
+
+          const files = response.result.files;
+          if (!files || files.length == 0) {
+            return null;
+          }
+
+          // files.map(async (file) => {
+
+          //   const req = await gapi.client.request({
+          //     path: `/drive/v3/files/${file.id}`,
+          //     method: "DELETE",
+          //     body: {
+          //       fileId: file.id,
+          //     },
+          //   });
+          //   console.log(req);
+          // });
+
+          // return null;
+          return files[0];
+        } catch (err) {
+          console.error(err);
+        }
+        return null;
+      }
+
+      async function updateVault(jsonBody) {
+        const vault = await findVault();
+        if (!vault) {
+          console.log("Vault not found");
+          return;
+        }
+
+        const fileMetadata = {
+          name: vaultFileName,
+        };
+        // const fileMedia = {
+        //   mimeType: "	application/json",
+        //   body: jsonBody,
+        // };
+        const fileMedia = {
+          mimeType: "	application/json",
+          body: jsonBody,
+          // body: new Blob([JSON.stringify(jsonBody)], {
+          //   type: "application/json",
+          // }).stream(),
+        };
+
+        try {
+          // const response = await gapi.client.drive.files.update({
+          //   fileId: vault.id,
+          //   resource: fileMetadata,
+          //   media: fileMedia,
+          //   fields: "id",
+          // });
+          const response = updateFile(vault.id, jsonBody);
+          console.log(response);
+          renderVaultContents();
+        } catch (err) {
+          console.error(err);
+        }
+      }
+
+      async function renderVaultContents() {
+        const vault = await findVault();
+        if (!vault) {
+          console.log("Vault not found");
+          return;
+        }
+
+        const response = await gapi.client.drive.files.get({
+          fileId: vault.id,
+          alt: "media",
+        });
+
+        console.log(response);
+      }
+    </script>
+    <script>
+      import Dexie from "dexie";
+      import { exportDB } from "dexie-export-import";
+
+      type Exercise = {
+        id?: number;
+        name: string;
+        description: string;
+      };
+
+      class MyDatabase extends Dexie {
+        exercises: Dexie.Table<Exercise, number>;
+
+        constructor() {
+          super("MyDatabase");
+
+          this.version(1).stores({
+            exercises: "++id,name,description",
+          });
+
+          this.exercises = this.table("exercises");
+
+          this.deleteAllExercises();
+          this.addExercise({
+            name: "Pushups",
+            description: "Pushups are a common calisthenics exercise.",
+          });
+        }
+
+        async addExercise(exercise: Exercise) {
+          await this.exercises.add(exercise);
+        }
+
+        async getExercise(id: number) {
+          return await this.exercises.get(id);
+        }
+
+        async getAllExercises() {
+          return await this.exercises.toArray();
+        }
+
+        async updateExercise(exercise: Exercise) {
+          await this.exercises.update(exercise.id!, exercise);
+        }
+
+        async deleteExercise(id: number) {
+          await this.exercises.delete(id);
+        }
+
+        async deleteAllExercises() {
+          await this.exercises.clear();
+        }
+      }
+
+      const db = new MyDatabase();
+
+      const syncDB = async () => {
+        console.log(await db.getAllExercises());
+        const blob = await exportDB(db);
+        const body = await blob.text();
+        (window as any).updateVault(body);
+
+        // Question: Is there a UUID per blob so that we know whether we should update or not?
+      };
+
+      const addButton = document.getElementById("add-button");
+      addButton!.addEventListener("click", async () => {
+        await db.addExercise({
+          // Generate a random name and description.
+          name: Math.random().toString(36).substring(7),
+          description: Math.random().toString(36).substring(7),
+        });
+
+        syncDB();
+      });
+
+      const deleteButton = document.getElementById("delete-button");
+      deleteButton!.addEventListener("click", async () => {
+        const allExercises = await db.getAllExercises();
+
+        await db.deleteExercise(
+          allExercises[Math.floor(Math.random() * allExercises.length)].id!
+        );
+
+        syncDB();
+      });
+
+      const findVaultButton = document.getElementById("find-vault")!;
+      findVaultButton.addEventListener("click", async () => {
+        const vault = await (window as any).findVault();
+        console.log(vault);
+      });
+
+      const createVaultButton = document.getElementById("create-vault")!;
+      createVaultButton.addEventListener("click", async (e) => {
+        // NOTE: For realsies, we need to ensure we can't fire off simultaneous requests to create a vault.
+        (e.target as HTMLButtonElement).disabled = true;
+        setTimeout(() => {
+          (e.target as HTMLButtonElement).disabled = false;
+        }, 2000);
+        (window as any).createVault();
+      });
+    </script>
+
+    <script
+      async
+      defer
+      src="https://apis.google.com/js/api.js"
+      onload="gapiLoaded()"></script>
+    <script
+      async
+      defer
+      src="https://accounts.google.com/gsi/client"
+      onload="gisLoaded()"></script>
+  </body>
+</html>
