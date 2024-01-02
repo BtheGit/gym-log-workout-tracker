@@ -12,7 +12,8 @@
   "keywords": [],
   "author": "Brendan Beltz",
   "dependencies": {
-    "@astrojs/cloudflare": "^8.0.0",
+    "@astrojs/cloudflare": "^7.5.3",
+    "@sqlite.org/sqlite-wasm": "^3.44.2-build1",
     "astro": "^4.0.7",
     "dexie": "^3.2.4",
     "dexie-export-import": "^4.0.7",
