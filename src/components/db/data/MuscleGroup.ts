@@ -30,15 +30,12 @@ export const muscleGroupNames = [
 
 export type MuscleGroupName = (typeof muscleGroupNames)[number];
 
-export const values = muscleGroupNames.map((name) => ({ name }));
+// export const values = muscleGroupNames.map((name) => ({ name }));
 
 export const populate = `
 BEGIN TRANSACTION;
 ${muscleGroupNames
-  .map(
-    (name) => `INSERT INTO MuscleGroup(name) VALUES ('${name}
-');`
-  )
+  .map((name) => `INSERT INTO MuscleGroup(name) VALUES ('${name}');`)
   .join("\n")}
 COMMIT;
 `;
