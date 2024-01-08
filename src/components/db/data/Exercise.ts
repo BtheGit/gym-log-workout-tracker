@@ -64,9 +64,9 @@ export const populateEach = values.map((value) => ({
       Distance
     ) VALUES (
       '${value.name}',
-      '${value.description}',
-      '${value.thumbnailUrl}',
-      '${value.videoUrl}',
+      '${value.description ?? ""}',
+      '${value.thumbnailUrl ?? ""}',
+      '${value.videoUrl ?? ""}',
       ${Number(value.reps)},
       ${Number(value.weight)},
       ${Number(value.time)},
