@@ -1,7 +1,7 @@
 import { sqlite3Worker1Promiser } from "@sqlite.org/sqlite-wasm";
-import * as MuscleGroup from "./data/MuscleGroup";
-import * as Exercise from "./data/Exercise";
-import * as ExerciseMuscleGroup from "./data/ExerciseMuscleGroup";
+import * as MuscleGroup from "./schema/MuscleGroup";
+import * as Exercise from "./schema/Exercise";
+import * as ExerciseMuscleGroup from "./schema/ExerciseMuscleGroup";
 
 declare module "@sqlite.org/sqlite-wasm" {
   export function sqlite3Worker1Promiser(
