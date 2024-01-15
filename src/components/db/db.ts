@@ -50,7 +50,15 @@ const exportDB = async () => {
 // Clear Old Tables
 await promiser("exec", {
   dbId,
-  sql: `DROP TABLE IF EXISTS ${MuscleGroup.name}`,
+  sql: `DROP TABLE IF EXISTS ${MuscleGroup.tableName}`,
+});
+await promiser("exec", {
+  dbId,
+  sql: `DROP TABLE IF EXISTS ${Exercise.tableName}`,
+});
+await promiser("exec", {
+  dbId,
+  sql: `DROP TABLE IF EXISTS ${ExerciseMuscleGroup.tableName}`,
 });
 await promiser("exec", {
   dbId,
@@ -76,13 +84,61 @@ await promiser("exec", {
 });
 
 // Populate Tables
+
+// ## Muscle Groups
 await promiser("exec", {
   dbId,
-  sql: MuscleGroup.populate,
+  sql: MuscleGroup.populateAll,
 });
 
-for (const exercise of Exercise.populateEach) {
-  let exerciseId;
+// ## Built-In Exercises
+await promiser("exec", {
+  dbId,
+  sql: Exercise.populateAll,
+});
+
+// Built-In ExerciseMuscleGroups
+await promiser("exec", {
+  dbId,
+  sql: ExerciseMuscleGroup.populateAll,
+});
+
+/**
+ * TODO:
+ * - Use static Pkeys for muscle groups
+ * - Use static pkeys for built-in exercises
+ */
+
+// ## Custom Programs
+
+// May be useful for custom programs as reference.
+// for (const exercise of Exercise.populateEach) {
+//   let exerciseId;
+//   await promiser("exec", {
+//     dbId,
+//     sql: exercise.sql,
+//     callback: async (res) => {
+//       if (!res.row) return;
+//       exerciseId = res.row[0];
+//     },
+//   });
+//   const sql = `BEGIN TRANSACTION;
+//   ${exercise.value.muscleGroups
+//     .map((muscleGroup) => {
+//       return `INSERT INTO ExerciseMuscleGroup(ExerciseID, MuscleGroupID) VALUES (${exerciseId}, (SELECT id FROM MuscleGroup WHERE Name = '${muscleGroup}'));`;
+//     })
+//     .join("\n")}
+//   COMMIT;`;
+//   await promiser("exec", {
+//     dbId,
+//     sql,
+//   });
+// }
+
+// ## Custom Workouts
+
+// ## TODO: Separate Table For Custom Exercises (lots of logic to join with built-ins. Todo later)
+
   await promiser("exec", {
     dbId,
     sql: exercise.sql,

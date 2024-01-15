@@ -1,16 +1,18 @@
 import { muscleGroups } from "../data/muscle-groups";
 
-export const name = "MuscleGroup";
+export const tableName = "v1__MuscleGroup";
 
-export const create =
-  "CREATE TABLE IF NOT EXISTS MuscleGroup(id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT NOT NULL)";
+export const create = `CREATE TABLE IF NOT EXISTS ${tableName}(id TEXT PRIMARY KEY NOT NULL, name TEXT NOT NULL)`;
 
 export type MuscleGroupName = (typeof muscleGroups)[number];
 
-export const populate = `
+export const populateAll = `
 BEGIN TRANSACTION;
 ${muscleGroups
-  .map((name) => `INSERT INTO MuscleGroup(name) VALUES ('${name}');`)
+  .map(
+    (muscleGroup) =>
+      `INSERT INTO ${tableName}(id, name) VALUES ('${muscleGroup.id}', '${muscleGroup.name}');`
+  )
   .join("\n")}
 COMMIT;
 `;
