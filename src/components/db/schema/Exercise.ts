@@ -1,9 +1,8 @@
-import { MuscleGroupName } from "./MuscleGroup";
 import { exercises } from "../data/exercises";
 
-export const tableName = "v1__Exercise";
+import { tableNames } from "../constants";
 
-export const create = `CREATE TABLE ${tableName} (
+export const create = `CREATE TABLE IF NOT EXISTS ${tableNames.Exercise} (
   id TEXT PRIMARY KEY NOT NULL,
   Name TEXT NOT NULL,
   Description TEXT,
@@ -32,7 +31,7 @@ export type ExerciseValue = {
 // In order to create the many-many ExerciseMuscleGroup table, we need to know the id of each Exercise and it's related muscle groups.
 export const populateEach = exercises.map((value) => ({
   value,
-  sql: `INSERT INTO ${tableName}(
+  sql: `INSERT INTO ${tableNames.Exercise}(
       id,
       Name,
       Description,
@@ -59,7 +58,7 @@ export const populateAll = `
   BEGIN TRANSACTION;
   ${exercises
     .map(
-      (exercise) => `INSERT INTO ${tableName}(
+      (exercise) => `INSERT INTO ${tableNames.Exercise}(
       id,
       Name,
       Description,
