@@ -21,6 +21,6 @@ export const exercises: ExerciseValue[] = [
     weight: true,
     time: false,
     distance: false,
-    muscleGroups: ["v1__chest", "v1__front-deltoids", "v1__triceps"],
+    muscleGroups: ["v1__chest", "v1__front_deltoids", "v1__triceps"],
   },
 ];
