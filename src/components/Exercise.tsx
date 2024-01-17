@@ -32,7 +32,7 @@ export const Exercise = () => {
         <h4>Muscle Groups</h4>
         <ul>
           {exercise.MuscleGroups.map((muscleGroup) => (
-            <a href={`/muscleGroup/${muscleGroup.id}`}>{muscleGroup.name}</a>
+            <a href={`/muscleGroup?id=${muscleGroup.id}`}>{muscleGroup.name}</a>
           ))}
         </ul>
       </div>
