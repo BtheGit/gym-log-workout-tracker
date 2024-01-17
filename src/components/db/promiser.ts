@@ -6,6 +6,7 @@ declare module "@sqlite.org/sqlite-wasm" {
   ): (...args: any[]) => Promise<any>;
 }
 
+// https://sqlite.org/wasm/doc/tip/api-worker1.md#promiser
 export const promiser: (...args: any[]) => Promise<any> = await new Promise(
   (resolve) => {
     const _promiser = sqlite3Worker1Promiser({

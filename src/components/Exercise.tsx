@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
-import { connectDB } from "./db/db";
+import { getDatabaseService } from "./db/db";
 import { getExercise } from "./db/queries";
 
-const db = connectDB();
+const db = getDatabaseService();
 
 export const Exercise = () => {
   const [exercise, setExercise] = useState<any>(null);

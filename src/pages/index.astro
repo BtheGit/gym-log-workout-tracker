@@ -12,12 +12,12 @@
     <script>
       const seedButton = document.querySelector("#seed")!;
       const exportButton = document.querySelector("#export")!;
-      import { connectDB } from "../components/db/db";
+      import { getDatabaseService } from "../components/db/db";
       import { seedDB } from "../components/db/seed";
       import { createViews } from "../components/db/views/index";
       seedButton.addEventListener("click", async () => {
         const start = performance.now();
-        const db = await connectDB();
+        const db = await getDatabaseService();
         await seedDB();
         await createViews();
         db.close();
@@ -26,7 +26,7 @@
       });
       exportButton.addEventListener("click", async () => {
         const start = performance.now();
-        const db = await connectDB();
+        const db = await getDatabaseService();
         await db.export();
         db.close();
         const end = performance.now();

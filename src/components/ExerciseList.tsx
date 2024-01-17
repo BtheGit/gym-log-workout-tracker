@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
-import { connectDB } from "./db/db";
+import { getDatabaseService } from "./db/db";
 import { getExercises } from "./db/queries";
 import "./ExerciseList.css";
 
-const db = connectDB();
+const db = getDatabaseService();
 
 export const ExerciseList = () => {
   const [exercises, setExercises] = useState<any>([]);
