@@ -28,21 +28,26 @@ export const execWithReturn = async (promiserConfig) => {
   return returnValue;
 };
 
-export const checkValueExistenceByTableColumn = async (
-  dbId,
-  table,
-  column,
-  value
-) => {
-  let result = 0;
+export const execWithReturns = async (promiserConfig) => {
+  let returnValues: any[] = [];
   await promiser("exec", {
-    dbId,
-    sql: `SELECT EXISTS (SELECT 1 FROM ${table} WHERE ${column} = '${value}');
-        `,
+    ...promiserConfig,
     callback: (res) => {
       if (!res.row) return;
-      result = res.row[0];
+      returnValues.push(res.row);
     },
   });
-  return result === 1;
+  return returnValues;
+};
+
+export const execWithFullReturns = async (promiserConfig) => {
+  let returns: any[] = [];
+  await promiser("exec", {
+    ...promiserConfig,
+    callback: (res) => {
+      if (!res.row) return;
+      returns.push(res);
+    },
+  });
+  return returns;
 };
