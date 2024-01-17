@@ -1,0 +1,19 @@
+.list-wrapper {
+  width: 90%;
+  max-width: 500px;
+}
+.list {
+  list-style: none;
+  margin: 0;
+  padding: 15px;
+  border-bottom: 1px solid #979595;
+}
+.list .list-item {
+  display: flex;
+  padding: 10px 5px;
+}
+.list img {
+  width: 80px;
+  height: 80px;
+  margin: 10px;
+}

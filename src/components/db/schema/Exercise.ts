@@ -83,3 +83,7 @@ export const populateAll = `
     .join("\n")}
     COMMIT;
 `;
+
+export const getAll = `SELECT * FROM ${tableNames.Exercise};`;
+// export const getAllViews = `CREATE VIEW IF NOT EXISTS ExerciseView(Name, Description) AS
+// SELECT * FROM ${tableNames.Exercise};`;
