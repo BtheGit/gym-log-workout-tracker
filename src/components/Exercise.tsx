@@ -21,12 +21,11 @@ export const Exercise = () => {
         <ul>
           {exercise.MuscleGroups.map(
             (muscleGroup: { id: string; name: string }) => (
-              <a
-                href={`/muscleGroup?id=${muscleGroup.id}`}
-                key={muscleGroup.id}
-              >
-                {muscleGroup.name}
-              </a>
+              <li key={muscleGroup.id}>
+                <a href={`/muscle-group?id=${muscleGroup.id}`}>
+                  {muscleGroup.name}
+                </a>
+              </li>
             )
           )}
         </ul>

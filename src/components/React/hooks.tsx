@@ -1,6 +1,11 @@
 import { useState, useEffect } from "react";
 import { getDatabaseService } from "../db/db";
-import { getExercise, getExercises } from "../db/queries";
+import {
+  getExercise,
+  getExercises,
+  getMuscleGroups,
+  getMuscleGroup,
+} from "../db/queries";
 
 export type IExerciseView = {
   ExerciseID: string;
@@ -16,6 +21,12 @@ export type IExerciseView = {
     id: string;
     name: string;
   }[];
+};
+
+export type IMuscleGroupWithExercisesView = {
+  id: string;
+  name: string;
+  exercises: { ExerciseID: string; ExerciseName: string }[];
 };
 
 const db = await getDatabaseService();
@@ -68,6 +79,7 @@ export const useExercise = (id: string) => {
 
   return exercise;
 };
+
 export const useExercises = () => {
   const [exercises, setExercises] = useState<IExerciseView[]>();
 
@@ -91,4 +103,62 @@ export const useExercises = () => {
   }, []);
 
   return exercises;
+};
+
+export const useMuscleGroups = () => {
+  const [muscleGroups, setMuscleGroups] =
+    useState<IMuscleGroupWithExercisesView[]>();
+
+  useEffect(() => {
+    const updateMuscleGroups = async () => {
+      const result = await db.exec({
+        sql: getMuscleGroups(),
+      });
+      const muscleGroups = result.map(({ columnNames, row }) =>
+        row.reduce((acc, curr, idx) => {
+          if (columnNames[idx] === "exercises") {
+            curr = JSON.parse(curr);
+          }
+          acc[columnNames[idx]!] = curr;
+          return acc;
+        }, {})
+      );
+      setMuscleGroups(muscleGroups);
+    };
+    updateMuscleGroups();
+  }, []);
+
+  return muscleGroups;
+};
+
+export const useMuscleGroup = (id: string) => {
+  const [muscleGroup, setMuscleGroup] =
+    useState<IMuscleGroupWithExercisesView>();
+
+  useEffect(() => {
+    const updateMuscleGroup = async () => {
+      const result = await db.exec({
+        sql: getMuscleGroup(id),
+      });
+      const muscleGroups: IMuscleGroupWithExercisesView[] = result.map(
+        ({ columnNames, row }) =>
+          row.reduce((acc: { [key: string]: any }, curr: any, idx: number) => {
+            if (columnNames[idx] === "exercises") {
+              curr = JSON.parse(curr);
+            }
+            acc[columnNames[idx]!] = curr;
+            return acc as IMuscleGroupWithExercisesView;
+          }, {} as IMuscleGroupWithExercisesView)
+      );
+      if (muscleGroups[0]) {
+        setMuscleGroup(muscleGroups[0]);
+      }
+    };
+
+    if (id) {
+      updateMuscleGroup();
+    }
+  }, [id]);
+
+  return muscleGroup;
 };
