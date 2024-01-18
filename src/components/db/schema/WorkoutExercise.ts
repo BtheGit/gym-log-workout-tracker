@@ -1,4 +1,4 @@
-import { tableNames } from "../constants.ts";
+import { tableNames } from "../constants";
 
 export const create = `CREATE TABLE IF NOT EXISTS ${tableNames.WorkoutExercise}(
     id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -10,6 +10,10 @@ export const create = `CREATE TABLE IF NOT EXISTS ${tableNames.WorkoutExercise}(
 );`;
 
 // TODO: Validate that exercise exists
-export const insertReturningInstanceId = (workoutId, exerciseId, sortOrder) => `
+export const insertReturningInstanceId = (
+  workoutId: number,
+  exerciseId: string,
+  sortOrder: number
+) => `
     INSERT INTO ${tableNames.WorkoutExercise}(WorkoutID, ExerciseID, SortOrder) VALUES(${workoutId}, '${exerciseId}', ${sortOrder}) RETURNING id;
 `;

@@ -2,8 +2,21 @@ import { promiser } from "./promiser";
 
 // TODO: Use custom event and promisified intermediary to create a pub/sub queue for all db operations that is framework-agnostic, so that we don't have to worry about race conditions or instatiating the db for every operation in each component.
 
+export type IExecReturn = {
+  columnNames: string[];
+  row: any[];
+  rowNumber: number;
+  type: string;
+};
+
+/**
+ * The Database Service is responsible for exposing a single pint of contact for all database operations.
+ * It is also responsible for managing the database connection and ensuring that all operations are executed in the correct order and without any parallel requests.
+ *
+ */
 export class DatabaseService {
-  dbId: number;
+  dbId: string | null = null;
+  // requestQueue: any[] = [];
 
   static instantiate = async () => {
     const instance = new DatabaseService();
@@ -42,6 +55,19 @@ export class DatabaseService {
     a.href = URL.createObjectURL(blob);
     a.download = "worker-promiser-export.sqlite3";
     a.click();
+  };
+
+  exec = async (promiserConfig) => {
+    let returnValue: IExecReturn[] = [];
+    await promiser("exec", {
+      ...promiserConfig,
+      dbId: this.dbId,
+      callback: (res) => {
+        if (!res.row) return;
+        returnValue.push(res);
+      },
+    });
+    return returnValue;
   };
 }
 

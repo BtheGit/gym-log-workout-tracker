@@ -2,6 +2,19 @@ import { exercises } from "../data/exercises";
 
 import { tableNames } from "../constants";
 
+export type IExercise = {
+  id: string;
+  name: string;
+  description?: string;
+  thumbnailUrl?: string;
+  videoUrl?: string;
+  reps: boolean;
+  weight: boolean;
+  time: boolean;
+  distance: boolean;
+  muscleGroupIds: string[];
+};
+
 export const create = `CREATE TABLE IF NOT EXISTS ${tableNames.Exercise} (
   id TEXT PRIMARY KEY NOT NULL,
   Name TEXT NOT NULL,
@@ -14,19 +27,6 @@ export const create = `CREATE TABLE IF NOT EXISTS ${tableNames.Exercise} (
   Distance INTEGER NOT NULL
 );
 `;
-
-export type ExerciseValue = {
-  id: string;
-  name: string;
-  description?: string;
-  thumbnailUrl?: string;
-  videoUrl?: string;
-  reps: boolean;
-  weight: boolean;
-  time: boolean;
-  distance: boolean;
-  muscleGroups: string[];
-};
 
 // In order to create the many-many ExerciseMuscleGroup table, we need to know the id of each Exercise and it's related muscle groups.
 export const populateEach = exercises.map((value) => ({

@@ -1,6 +1,7 @@
 import { exercises } from "../data/exercises";
 
-import { tableNames } from "../constants.ts";
+import { tableNames } from "../constants";
+
 export const create = `CREATE TABLE IF NOT EXISTS ${tableNames.ExerciseMuscleGroup} (
     ExerciseID INTEGER NOT NULL,
     MuscleGroupID INTEGER NOT NULL,
@@ -13,7 +14,7 @@ export const populateAll = `
     BEGIN TRANSACTION;
     ${exercises
       .map((exercise) =>
-        exercise.muscleGroups.map(
+        exercise.muscleGroupIds.map(
           (muscleGroup) =>
             `INSERT INTO ${tableNames.ExerciseMuscleGroup}(ExerciseID, MuscleGroupID) VALUES('${exercise.id}', '${muscleGroup}');`
         )

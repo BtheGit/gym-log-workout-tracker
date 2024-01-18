@@ -1,4 +1,5 @@
 import { tableNames } from "../constants";
+import type { DatabaseService } from "../db";
 import { promiser } from "../promiser";
 
 export const createExerciseWithMuscleGroupsView = `
@@ -26,8 +27,6 @@ GROUP BY
 
 `;
 
-export const createViews = async () => {
-  await promiser("exec", {
-    sql: createExerciseWithMuscleGroupsView,
-  });
+export const createViews = async (db: DatabaseService) => {
+  await db.exec({ sql: createExerciseWithMuscleGroupsView });
 };

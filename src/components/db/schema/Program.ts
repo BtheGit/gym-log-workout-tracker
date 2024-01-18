@@ -1,4 +1,5 @@
 import { tableNames } from "../constants";
+import type { IWorkout } from "./Workout";
 
 export const create = `CREATE TABLE IF NOT EXISTS ${tableNames.Program}(
     id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -7,13 +8,13 @@ export const create = `CREATE TABLE IF NOT EXISTS ${tableNames.Program}(
     Author TEXT NOT NULL
 );`;
 
-export type ProgramValue = {
+export type IProgram = {
   name: string;
   description: string;
   author: string;
 };
 
-export const insertReturningId = (program) =>
+export const insertReturningId = (program: IProgram) =>
   `INSERT INTO ${tableNames.Program}(
     Name,
     Description,

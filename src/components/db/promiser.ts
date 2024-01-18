@@ -17,38 +17,38 @@ export const promiser: (...args: any[]) => Promise<any> = await new Promise(
   }
 );
 
-export const execWithReturn = async (promiserConfig) => {
-  let returnValue;
-  await promiser("exec", {
-    ...promiserConfig,
-    callback: (res) => {
-      if (!res.row) return;
-      returnValue = res.row[0];
-    },
-  });
-  return returnValue;
-};
+// export const execWithReturn = async (promiserConfig) => {
+//   let returnValue;
+//   await promiser("exec", {
+//     ...promiserConfig,
+//     callback: (res) => {
+//       if (!res.row) return;
+//       returnValue = res.row[0];
+//     },
+//   });
+//   return returnValue;
+// };
 
-export const execWithReturns = async (promiserConfig) => {
-  let returnValues: any[] = [];
-  await promiser("exec", {
-    ...promiserConfig,
-    callback: (res) => {
-      if (!res.row) return;
-      returnValues.push(res.row);
-    },
-  });
-  return returnValues;
-};
+// export const execWithReturns = async (promiserConfig) => {
+//   let returnValues: any[] = [];
+//   await promiser("exec", {
+//     ...promiserConfig,
+//     callback: (res) => {
+//       if (!res.row) return;
+//       returnValues.push(res.row);
+//     },
+//   });
+//   return returnValues;
+// };
 
-export const execWithFullReturns = async (promiserConfig) => {
-  let returns: any[] = [];
-  await promiser("exec", {
-    ...promiserConfig,
-    callback: (res) => {
-      if (!res.row) return;
-      returns.push(res);
-    },
-  });
-  return returns;
-};
+// export const execWithFullReturns = async (promiserConfig) => {
+//   let returns: any[] = [];
+//   await promiser("exec", {
+//     ...promiserConfig,
+//     callback: (res) => {
+//       if (!res.row) return;
+//       returns.push(res);
+//     },
+//   });
+//   return returns;
+// };

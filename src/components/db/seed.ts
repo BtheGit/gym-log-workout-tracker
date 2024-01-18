@@ -1,7 +1,10 @@
 import { tableNames } from "./constants";
-import { programs } from "./data/programs";
-import { workouts } from "./data/workouts";
-import { execWithReturn, promiser } from "./promiser";
+import {
+  programs,
+  type IProgramData,
+  type IProgramWorkoutData,
+} from "./data/programs";
+import { workouts, type IWorkoutData } from "./data/workouts";
 import * as Exercise from "./schema/Exercise";
 import * as MuscleGroup from "./schema/MuscleGroup";
 import * as ExerciseMuscleGroup from "./schema/ExerciseMuscleGroup";
@@ -10,22 +13,32 @@ import * as Workout from "./schema/Workout";
 import * as ProgramWorkout from "./schema/ProgramWorkout";
 import * as WorkoutExercise from "./schema/WorkoutExercise";
 import * as WorkoutExerciseSet from "./schema/WorkoutExerciseSet";
+import type { DatabaseService } from "./db";
 
-export const addWorkout = async (workout, programId?) => {
+export const addWorkout = async (
+  db: DatabaseService,
+  workout: IWorkoutData,
+  programId?: number
+) => {
   // ## Workout
-  const workoutId = await execWithReturn({
+  const insertWorkoutResult = await db.exec({
     sql: Workout.insertReturningId(workout),
   });
+  const workoutId = insertWorkoutResult?.[0]?.row?.[0];
+
+  if (!workoutId) {
+    throw new Error("Failed to capture workoutId");
+  }
 
   if (programId) {
     // ## ProgramWorkout
-    await promiser("exec", {
+    await db.exec({
       sql: ProgramWorkout.insert(
         programId,
         workoutId,
         // TODO: Ensure this is required in creating a program workout!
-        workout.week,
-        workout.day
+        (workout as IProgramWorkoutData).week,
+        (workout as IProgramWorkoutData).day
       ),
     });
   }
@@ -39,13 +52,18 @@ export const addWorkout = async (workout, programId?) => {
     exerciseIndex,
     workoutExercise,
   ] of workout.exercises.entries()) {
-    const workoutExerciseInstanceId = await execWithReturn({
+    const insertResult = await db.exec({
       sql: WorkoutExercise.insertReturningInstanceId(
         workoutId,
         workoutExercise.id,
         exerciseIndex
       ),
     });
+
+    const workoutExerciseInstanceId = insertResult?.[0]?.row?.[0];
+    if (!workoutExerciseInstanceId) {
+      throw new Error("Failed to capture workoutExerciseInstanceId");
+    }
 
     // ## WorkoutExerciseSet
     // TODO: FUTURE FEATURE = Validate that the set matches the exercise (eg. reps, weight vs time, distance)
@@ -56,7 +74,7 @@ export const addWorkout = async (workout, programId?) => {
       setIndex,
       workoutExerciseSet,
     ] of workoutExercise.sets.entries()) {
-      await promiser("exec", {
+      await db.exec({
         sql: WorkoutExerciseSet.insert(
           workoutExerciseInstanceId,
           setIndex,
@@ -70,64 +88,74 @@ export const addWorkout = async (workout, programId?) => {
   }
 };
 
-export const addProgram = async (program) => {
+export const addProgram = async (
+  db: DatabaseService,
+  program: IProgramData
+) => {
   // ## Program
-  const programId = await execWithReturn({
+  const programInsertResult = await db.exec({
     sql: Program.insertReturningId(program),
   });
+  const programId = programInsertResult?.[0]?.row?.[0];
+  if (!programId) {
+    throw new Error("Failed to capture programID");
+  }
+  if (!program.workouts) {
+    return;
+  }
   for await (const workout of program.workouts) {
-    await addWorkout(workout, programId);
+    await addWorkout(db, workout, programId);
   }
 };
 
-export const seedDB = async () => {
+export const seedDB = async (db: DatabaseService) => {
   // Clear Old Tables
   await Promise.all(
     Object.values(tableNames).map((tableName) =>
-      promiser("exec", { sql: `DROP TABLE IF EXISTS ${tableName}` })
+      db.exec({ sql: `DROP TABLE IF EXISTS ${tableName}` })
     )
   );
 
   // Create Tables Anew
-  await promiser("exec", {
+  await db.exec({
     sql: MuscleGroup.create,
   });
-  await promiser("exec", {
+  await db.exec({
     sql: Exercise.create,
   });
-  await promiser("exec", {
+  await db.exec({
     sql: ExerciseMuscleGroup.create,
   });
-  await promiser("exec", {
+  await db.exec({
     sql: Program.create,
   });
-  await promiser("exec", {
+  await db.exec({
     sql: Workout.create,
   });
-  await promiser("exec", {
+  await db.exec({
     sql: ProgramWorkout.create,
   });
-  await promiser("exec", {
+  await db.exec({
     sql: WorkoutExercise.create,
   });
-  await promiser("exec", {
+  await db.exec({
     sql: WorkoutExerciseSet.create,
   });
 
   // Populate Tables
 
   // ## Muscle Groups
-  await promiser("exec", {
+  await db.exec({
     sql: MuscleGroup.populateAll,
   });
 
   // ## Built-In Exercises
-  await promiser("exec", {
+  await db.exec({
     sql: Exercise.populateAll,
   });
 
   // Built-In ExerciseMuscleGroups
-  await promiser("exec", {
+  await db.exec({
     sql: ExerciseMuscleGroup.populateAll,
   });
 
@@ -138,11 +166,11 @@ export const seedDB = async () => {
 
   // ## Add Programs
   for await (const program of programs) {
-    await addProgram(program);
+    await addProgram(db, program);
   }
 
   for await (const workout of workouts) {
-    await addWorkout(workout);
+    await addWorkout(db, workout);
   }
 
   // ## Add Workouts

@@ -1,5 +1,6 @@
 ---
-import { Exercise } from "../components/Exercise";
+// NOTE: Getting inexplicable errors when trying to import the component with it's original name.
+import { Exercise as ExerciseComponent } from "../components/Exercise";
 ---
 
 <html lang="en">
@@ -9,6 +10,6 @@ import { Exercise } from "../components/Exercise";
     <title>Document</title>
   </head>
   <body>
-    <Exercise client:only />
+    <ExerciseComponent client:only />
   </body>
 </html>

@@ -1,3 +1,17 @@
+import type { IWorkoutData } from "./workouts";
+
+export type IProgramWorkoutData = IWorkoutData & {
+  week: number;
+  day: number;
+};
+
+export type IProgramData = {
+  name: string;
+  description: string;
+  author: string;
+  workouts?: IProgramWorkoutData[];
+};
+
 export const programs = [
   {
     name: "Beginner Fat Loss",

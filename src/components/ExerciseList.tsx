@@ -1,21 +1,12 @@
-import React, { useState, useEffect } from "react";
-import { getDatabaseService } from "./db/db";
-import { getExercises } from "./db/queries";
+import { useExercises } from "./React/hooks";
 import "./ExerciseList.css";
 
-const db = getDatabaseService();
-
 export const ExerciseList = () => {
-  const [exercises, setExercises] = useState<any>([]);
+  const exercises = useExercises();
 
-  useEffect(() => {
-    const awaitExercises = async () => {
-      const exercises = await getExercises();
-      setExercises(exercises);
-    };
-
-    awaitExercises();
-  }, []);
+  if (!exercises) {
+    return null;
+  }
 
   return (
     <>
