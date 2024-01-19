@@ -1,4 +1,4 @@
-import { useQueryStringValue, useMuscleGroup } from "./React/hooks";
+import { useQueryStringValue, useMuscleGroup } from "./hooks";
 
 export const MuscleGroup = () => {
   const id = useQueryStringValue("id");

@@ -1,7 +1,7 @@
-import { useExercises } from "./React/hooks";
-import "./ExerciseList.css";
+import { useExercises } from "./hooks";
+import "./Exercises.css";
 
-export const ExerciseList = () => {
+export const Exercises = () => {
   const exercises = useExercises();
 
   if (!exercises) {

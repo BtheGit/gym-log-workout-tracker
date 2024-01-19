@@ -58,14 +58,17 @@ export const useExercise = (id: string) => {
       });
 
       const exercises: IExerciseView[] = result.map(({ columnNames, row }) =>
-        row.reduce((acc: { [key: string]: any }, curr: any, idx: number) => {
-          // TODO: Figure out how to parse JSON arbitrarily
-          if (columnNames[idx] === "MuscleGroups") {
-            curr = JSON.parse(curr);
-          }
-          acc[columnNames[idx]!] = curr;
-          return acc as IExerciseView;
-        }, {} as IExerciseView)
+        row.reduce(
+          (acc: { [key: string]: unknown }, curr: unknown, idx: number) => {
+            // TODO: Figure out how to parse JSON arbitrarily
+            if (columnNames[idx] === "MuscleGroups") {
+              curr = JSON.parse(curr as string);
+            }
+            acc[columnNames[idx]!] = curr;
+            return acc as IExerciseView;
+          },
+          {} as IExerciseView
+        )
       );
       if (exercises[0]) {
         setExercise(exercises[0]);
@@ -142,13 +145,16 @@ export const useMuscleGroup = (id: string) => {
       });
       const muscleGroups: IMuscleGroupWithExercisesView[] = result.map(
         ({ columnNames, row }) =>
-          row.reduce((acc: { [key: string]: any }, curr: any, idx: number) => {
-            if (columnNames[idx] === "exercises") {
-              curr = JSON.parse(curr);
-            }
-            acc[columnNames[idx]!] = curr;
-            return acc as IMuscleGroupWithExercisesView;
-          }, {} as IMuscleGroupWithExercisesView)
+          row.reduce(
+            (acc: { [key: string]: unknown }, curr: unknown, idx: number) => {
+              if (columnNames[idx] === "exercises") {
+                curr = JSON.parse(curr as string);
+              }
+              acc[columnNames[idx]!] = curr;
+              return acc as IMuscleGroupWithExercisesView;
+            },
+            {} as IMuscleGroupWithExercisesView
+          )
       );
       if (muscleGroups[0]) {
         setMuscleGroup(muscleGroups[0]);

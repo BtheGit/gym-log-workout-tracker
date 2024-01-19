@@ -1,5 +1,4 @@
 import { tableNames } from "../constants";
-import type { IWorkout } from "./Workout";
 
 export const create = `CREATE TABLE IF NOT EXISTS ${tableNames.Program}(
     id INTEGER PRIMARY KEY AUTOINCREMENT,

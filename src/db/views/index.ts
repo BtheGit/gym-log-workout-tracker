@@ -1,6 +1,5 @@
 import { tableNames } from "../constants";
 import type { DatabaseService } from "../db";
-import { promiser } from "../promiser";
 
 export const createExerciseWithMuscleGroupsView = `
 DROP VIEW IF EXISTS ExerciseWithMuscleGroups;
