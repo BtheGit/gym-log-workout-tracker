@@ -1,4 +1,4 @@
-import { useMuscleGroups } from "./React/hooks";
+import { useMuscleGroups } from "./hooks";
 
 export const MuscleGroups = () => {
   const muscleGroups = useMuscleGroups();

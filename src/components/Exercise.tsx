@@ -1,4 +1,4 @@
-import { useQueryStringValue, useExercise } from "./React/hooks";
+import { useQueryStringValue, useExercise } from "./hooks";
 
 export const Exercise = () => {
   // TODO: 404 redirects? (Or equivalent since this is an 'app')
