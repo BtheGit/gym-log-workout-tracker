@@ -25,7 +25,7 @@ export class DatabaseService {
   };
 
   open = async () => {
-    let response = await promiser("open", {
+    const response: { dbId: string } = await promiser("open", {
       filename: "file:worker-promiser.sqlite3?vfs=opfs",
     });
     const { dbId } = response;
