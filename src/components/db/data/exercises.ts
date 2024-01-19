@@ -1,6 +1,6 @@
-import { ExerciseValue } from "../schema/Exercise";
+import type { IExercise } from "../schema/Exercise";
 
-export const exercises: ExerciseValue[] = [
+export const exercises: IExercise[] = [
   {
     id: "v1__overhead_cable_triceps_extension",
     name: "Overhead Cable Triceps Extension",
@@ -10,7 +10,7 @@ export const exercises: ExerciseValue[] = [
     weight: true,
     time: false,
     distance: false,
-    muscleGroups: ["v1__triceps"],
+    muscleGroupIds: ["v1__triceps"],
   },
   {
     id: "v1__incline_dumbbell_press",
@@ -21,6 +21,6 @@ export const exercises: ExerciseValue[] = [
     weight: true,
     time: false,
     distance: false,
-    muscleGroups: ["v1__chest", "v1__front_deltoids", "v1__triceps"],
+    muscleGroupIds: ["v1__chest", "v1__front_deltoids", "v1__triceps"],
   },
 ];

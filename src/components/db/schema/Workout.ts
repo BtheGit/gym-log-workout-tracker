@@ -1,6 +1,9 @@
-// import { workouts } from "../data/workouts";
-
 import { tableNames } from "../constants";
+
+export type IWorkout = {
+  name: string;
+  description: string;
+};
 
 // TODO: Suport author (optional)
 export const create = `CREATE TABLE IF NOT EXISTS ${tableNames.Workout}(
@@ -9,12 +12,7 @@ export const create = `CREATE TABLE IF NOT EXISTS ${tableNames.Workout}(
     Description TEXT NOT NULL
 );`;
 
-export type WorkoutValue = {
-  name: string;
-  description: string;
-};
-
-export const insertReturningId = (workout) => `
+export const insertReturningId = (workout: IWorkout) => `
   INSERT INTO ${tableNames.Workout}(
     Name,
     Description

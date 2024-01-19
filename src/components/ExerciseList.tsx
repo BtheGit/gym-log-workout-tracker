@@ -1,21 +1,12 @@
-import React, { useState, useEffect } from "react";
-import { connectDB } from "./db/db";
-import { getExercises } from "./db/queries";
+import { useExercises } from "./React/hooks";
 import "./ExerciseList.css";
 
-const db = connectDB();
-
 export const ExerciseList = () => {
-  const [exercises, setExercises] = useState<any>([]);
+  const exercises = useExercises();
 
-  useEffect(() => {
-    const awaitExercises = async () => {
-      const exercises = await getExercises();
-      setExercises(exercises);
-    };
-
-    awaitExercises();
-  }, []);
+  if (!exercises) {
+    return null;
+  }
 
   return (
     <>
@@ -36,7 +27,7 @@ export const ExerciseList = () => {
                 <h4>Muscle Groups</h4>
                 <ul>
                   {exercise.MuscleGroups.map((muscleGroup, idx) => (
-                    <a href={`/muscleGroup?id=${muscleGroup.id}`} key={idx}>
+                    <a href={`/muscle-group?id=${muscleGroup.id}`} key={idx}>
                       {muscleGroup.name}
                     </a>
                   ))}

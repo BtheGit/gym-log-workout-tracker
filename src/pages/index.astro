@@ -12,23 +12,21 @@
     <script>
       const seedButton = document.querySelector("#seed")!;
       const exportButton = document.querySelector("#export")!;
-      import { connectDB } from "../components/db/db";
+      import { getDatabaseService } from "../components/db/db";
       import { seedDB } from "../components/db/seed";
       import { createViews } from "../components/db/views/index";
+      const db = await getDatabaseService();
+      console.log(db)
       seedButton.addEventListener("click", async () => {
         const start = performance.now();
-        const db = await connectDB();
-        await seedDB();
-        await createViews();
-        db.close();
+        await seedDB(db);
+        await createViews(db);
         const end = performance.now();
         console.log(`Database reseeded in ${end - start}ms`);
       });
       exportButton.addEventListener("click", async () => {
         const start = performance.now();
-        const db = await connectDB();
         await db.export();
-        db.close();
         const end = performance.now();
         console.log(`Database exported in ${end - start}ms`);
       });

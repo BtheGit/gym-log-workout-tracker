@@ -1,4 +1,5 @@
 import { tableNames } from "../constants";
+import type { DatabaseService } from "../db";
 import { promiser } from "../promiser";
 
 export const createExerciseWithMuscleGroupsView = `
@@ -26,8 +27,24 @@ GROUP BY
 
 `;
 
-export const createViews = async () => {
-  await promiser("exec", {
-    sql: createExerciseWithMuscleGroupsView,
-  });
+export const createMuscleGroupWithExercisesView = `
+DROP VIEW IF EXISTS MuscleGroupWithExercises;
+CREATE VIEW MuscleGroupWithExercises AS
+SELECT
+    mg.id AS MuscleGroupID,
+    mg.name AS MuscleGroupName,
+    JSON_GROUP_ARRAY(JSON_OBJECT('ExerciseID', e.id, 'ExerciseName', e.Name)) AS Exercises
+FROM
+    ${tableNames.MuscleGroup} mg
+JOIN
+    ${tableNames.ExerciseMuscleGroup} emg ON mg.id = emg.MuscleGroupID
+JOIN
+    ${tableNames.Exercise} e ON emg.ExerciseID = e.id
+GROUP BY
+    mg.id;
+`;
+
+export const createViews = async (db: DatabaseService) => {
+  await db.exec({ sql: createExerciseWithMuscleGroupsView });
+  await db.exec({ sql: createMuscleGroupWithExercisesView });
 };

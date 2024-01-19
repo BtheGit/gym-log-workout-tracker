@@ -1,21 +1,9 @@
-import React, { useState, useEffect } from "react";
-import { connectDB } from "./db/db";
-import { getExercise } from "./db/queries";
-
-const db = connectDB();
+import { useQueryStringValue, useExercise } from "./React/hooks";
 
 export const Exercise = () => {
-  const [exercise, setExercise] = useState<any>(null);
-
-  useEffect(() => {
-    const updateExercise = async () => {
-      const id = new URL(window.location.href).searchParams.get("id");
-      if (!id) return;
-      const exercise = await getExercise(id);
-      setExercise(exercise);
-    };
-    updateExercise();
-  }, []);
+  // TODO: 404 redirects? (Or equivalent since this is an 'app')
+  const id = useQueryStringValue("id");
+  const exercise = useExercise(id);
 
   if (!exercise) {
     return null;
@@ -31,9 +19,15 @@ export const Exercise = () => {
         {/* Insert rendered description (md -> html) */}
         <h4>Muscle Groups</h4>
         <ul>
-          {exercise.MuscleGroups.map((muscleGroup) => (
-            <a href={`/muscleGroup?id=${muscleGroup.id}`}>{muscleGroup.name}</a>
-          ))}
+          {exercise.MuscleGroups.map(
+            (muscleGroup: { id: string; name: string }) => (
+              <li key={muscleGroup.id}>
+                <a href={`/muscle-group?id=${muscleGroup.id}`}>
+                  {muscleGroup.name}
+                </a>
+              </li>
+            )
+          )}
         </ul>
       </div>
     </>

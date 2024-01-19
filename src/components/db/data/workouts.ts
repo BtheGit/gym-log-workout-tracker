@@ -1,10 +1,22 @@
-import { WorkoutValue } from "../schema/Workout";
+export type IWorkoutData = {
+  name: string;
+  description: string;
+  exercises?: {
+    id: string;
+    sets: {
+      weight?: number;
+      reps?: number;
+      time?: number;
+      distance?: number;
+    }[];
+  }[];
+};
 
 // DECISION POINT:
 // TODO: Should we change this to require at least one exercise? (Will make things easier from the data side for sure, but not the UI side)
 // TODO: Have a mix of workouts with and without exercises, and workout exercises with and without sets.
 // NOTE: Again, it is not a creazy or uncommon solution to require at least one child before creating either. So maybe we're too nice here.
-export const workouts: WorkoutValue[] = [
+export const workouts: IWorkoutData[] = [
   {
     name: "Dumbbell Only Workout: 5 Day Dumbbell Workout Split" /* Muscle Building */,
     description:

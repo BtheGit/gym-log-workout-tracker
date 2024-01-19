@@ -1,63 +1,54 @@
-import { execWithFullReturns } from "../promiser";
-
 // NOTE: This is more of a controller than a base query (maybe a custom hook?)
-export const getExercises = async () => {
-  const rows = await execWithFullReturns({
-    sql: `SELECT
-    ExerciseID,
-    ExerciseName,
-    ExerciseDescription,
-    ThumbnailUrl,
-    VideoUrl,
-    Reps,
-    Weight,
-    Time,
-    Distance,
-    json_extract(MuscleGroups, '$') AS MuscleGroups
+export const getExercises = () => `
+SELECT
+  ExerciseID,
+  ExerciseName,
+  ExerciseDescription,
+  ThumbnailUrl,
+  VideoUrl,
+  Reps,
+  Weight,
+  Time,
+  Distance,
+  json_extract(MuscleGroups, '$') AS MuscleGroups
 FROM
-    ExerciseWithMuscleGroups;
-`,
-  });
-  const exercises = rows.map(({ columnNames, row }) =>
-    row.reduce((acc, curr, idx) => {
-      if (columnNames[idx] === "MuscleGroups") {
-        curr = JSON.parse(curr);
-      }
-      acc[columnNames[idx]] = curr;
-      return acc;
-    }, {})
-  );
-  return exercises;
-};
+  ExerciseWithMuscleGroups;
+`;
 
-export const getExercise = async (id) => {
-  const rows = await execWithFullReturns({
-    sql: `SELECT
-        ExerciseID,
-        ExerciseName,
-        ExerciseDescription,
-        ThumbnailUrl,
-        VideoUrl,
-        Reps,
-        Weight,
-        Time,
-        Distance,
-        json_extract(MuscleGroups, '$') AS MuscleGroups
-    FROM
-        ExerciseWithMuscleGroups
-    WHERE
-        ExerciseID = '${id}'
-        ;
-    `,
-  });
-  const exercises = rows.map(({ columnNames, row }) =>
-    row.reduce((acc, curr, idx) => {
-      if (columnNames[idx] === "MuscleGroups") {
-        curr = JSON.parse(curr);
-      }
-      acc[columnNames[idx]] = curr;
-      return acc;
-    }, {})
-  );
-  return exercises[0];
-};
+export const getExercise = (id: string) => `
+SELECT
+  ExerciseID,
+  ExerciseName,
+  ExerciseDescription,
+  ThumbnailUrl,
+  VideoUrl,
+  Reps,
+  Weight,
+  Time,
+  Distance,
+  json_extract(MuscleGroups, '$') AS MuscleGroups
+FROM
+  ExerciseWithMuscleGroups
+WHERE
+  ExerciseID = '${id}';
+`;
+
+export const getMuscleGroups = () => `
+SELECT
+  MuscleGroupID as id,
+  MuscleGroupName as name,
+  json_extract(Exercises, '$') AS exercises
+FROM
+    MuscleGroupWithExercises;
+`;
+
+export const getMuscleGroup = (id: string) => `
+SELECT
+    MuscleGroupID as id,
+    MuscleGroupName as name,
+    json_extract(Exercises, '$') AS exercises
+FROM
+    MuscleGroupWithExercises
+WHERE
+    MuscleGroupID = '${id}';
+`;
