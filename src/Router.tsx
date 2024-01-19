@@ -31,9 +31,9 @@ const Root = () => {
       <Route element={<Layout />}>
         <Route path="/" element={<Home />} />
         <Route path="/exercises" element={<Exercises />} />
-        <Route path="/exercise" element={<Exercise />} />
+        <Route path="/exercise/:id" element={<Exercise />} />
         <Route path="/muscle-groups" element={<MuscleGroups />} />
-        <Route path="/muscle-group" element={<MuscleGroup />} />
+        <Route path="/muscle-group/:id" element={<MuscleGroup />} />
       </Route>
     </Routes>
   );

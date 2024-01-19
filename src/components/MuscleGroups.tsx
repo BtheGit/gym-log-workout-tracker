@@ -15,7 +15,7 @@ export const MuscleGroups = () => {
           <ul className="list">
             <li className="list-item">
               <div className="item-content">
-                <a href={`/muscle-group?id=${muscleGroup.id}`}>
+                <a href={`/muscle-group/${muscleGroup.id}`}>
                   <h2>{muscleGroup.name}</h2>
                 </a>
               </div>
