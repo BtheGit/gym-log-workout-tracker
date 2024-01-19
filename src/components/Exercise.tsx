@@ -1,8 +1,8 @@
-import { useQueryStringValue, useExercise } from "./hooks";
+import { useParams } from "react-router-dom";
+import { useExercise } from "./hooks";
 
 export const Exercise = () => {
-  // TODO: 404 redirects? (Or equivalent since this is an 'app')
-  const id = useQueryStringValue("id");
+  const id = useParams<{ id: string }>().id!;
   const exercise = useExercise(id);
 
   if (!exercise) {
@@ -22,7 +22,7 @@ export const Exercise = () => {
           {exercise.MuscleGroups.map(
             (muscleGroup: { id: string; name: string }) => (
               <li key={muscleGroup.id}>
-                <a href={`/muscle-group?id=${muscleGroup.id}`}>
+                <a href={`/muscle-group/${muscleGroup.id}`}>
                   {muscleGroup.name}
                 </a>
               </li>

@@ -20,14 +20,14 @@ export const Exercises = () => {
               )}
 
               <div className="item-content">
-                <a href={`/exercise?id=${exercise.ExerciseID}`}>
+                <a href={`/exercise/${exercise.ExerciseID}`}>
                   <h2>{exercise.ExerciseName}</h2>
                 </a>
                 {/* Insert rendered description (md -> html) */}
                 <h4>Muscle Groups</h4>
                 <ul>
                   {exercise.MuscleGroups.map((muscleGroup, idx) => (
-                    <a href={`/muscle-group?id=${muscleGroup.id}`} key={idx}>
+                    <a href={`/muscle-group/${muscleGroup.id}`} key={idx}>
                       {muscleGroup.name}
                     </a>
                   ))}
