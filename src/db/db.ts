@@ -58,11 +58,11 @@ export class DatabaseService {
   };
 
   exec = async (promiserConfig) => {
-    let returnValue: IExecReturn[] = [];
+    const returnValue: IExecReturn[] = [];
     await promiser("exec", {
       ...promiserConfig,
       dbId: this.dbId,
-      callback: (res) => {
+      callback: (res: IExecReturn) => {
         if (!res.row) return;
         returnValue.push(res);
       },

@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { getDatabaseService } from "../db/db";
+import { useDatabase } from "../db/DatabaseContext";
 import {
   getExercise,
   getExercises,
@@ -29,8 +29,6 @@ export type IMuscleGroupWithExercisesView = {
   exercises: { ExerciseID: string; ExerciseName: string }[];
 };
 
-const db = await getDatabaseService();
-
 /**
  *
  * @param key The querystring param identifier
@@ -43,12 +41,13 @@ export const useQueryStringValue = (key: string) => {
     const url = new URL(window.location.href);
     const value = url.searchParams.get(key);
     setValue(value ?? "");
-  }, []);
+  }, [key]);
 
   return value;
 };
 
 export const useExercise = (id: string) => {
+  const db = useDatabase();
   const [exercise, setExercise] = useState<IExerciseView>();
 
   useEffect(() => {
@@ -78,12 +77,13 @@ export const useExercise = (id: string) => {
     if (id) {
       updateExercise();
     }
-  }, [id]);
+  }, [db, id]);
 
   return exercise;
 };
 
 export const useExercises = () => {
+  const db = useDatabase();
   const [exercises, setExercises] = useState<IExerciseView[]>();
 
   useEffect(() => {
@@ -103,12 +103,13 @@ export const useExercises = () => {
       setExercises(exercises);
     };
     updateExercise();
-  }, []);
+  }, [db]);
 
   return exercises;
 };
 
 export const useMuscleGroups = () => {
+  const db = useDatabase();
   const [muscleGroups, setMuscleGroups] =
     useState<IMuscleGroupWithExercisesView[]>();
 
@@ -129,12 +130,13 @@ export const useMuscleGroups = () => {
       setMuscleGroups(muscleGroups);
     };
     updateMuscleGroups();
-  }, []);
+  }, [db]);
 
   return muscleGroups;
 };
 
 export const useMuscleGroup = (id: string) => {
+  const db = useDatabase();
   const [muscleGroup, setMuscleGroup] =
     useState<IMuscleGroupWithExercisesView>();
 
@@ -164,7 +166,7 @@ export const useMuscleGroup = (id: string) => {
     if (id) {
       updateMuscleGroup();
     }
-  }, [id]);
+  }, [db, id]);
 
   return muscleGroup;
 };

@@ -24,7 +24,7 @@ export const addWorkout = async (
   const insertWorkoutResult = await db.exec({
     sql: Workout.insertReturningId(workout),
   });
-  const workoutId = insertWorkoutResult?.[0]?.row?.[0];
+  const workoutId: number = insertWorkoutResult?.[0]?.row?.[0];
 
   if (!workoutId) {
     throw new Error("Failed to capture workoutId");

@@ -5,7 +5,6 @@ export const MuscleGroup = () => {
   const muscleGroup = useMuscleGroup(id);
 
   // NOTE: It might make sense to just query muscle groups and find by id, however, with the DB local and built in caching, hard to really care too much until we hit issues.
-  console.log(muscleGroup);
   if (!muscleGroup) {
     return null;
   }
