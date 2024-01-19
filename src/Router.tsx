@@ -3,6 +3,7 @@ import {
   Routes,
   Route,
   Link,
+  NavLink,
   Outlet,
 } from "react-router-dom";
 import { Home } from "./pages/Home";
@@ -15,9 +16,9 @@ const Layout = () => {
   return (
     <>
       <nav>
-        <Link to="/">Home</Link>
-        <Link to="/exercises">Exercises</Link>
-        <Link to="/muscle-groups">Muscle Groups</Link>
+        <NavLink to="/">Home</NavLink>
+        <NavLink to="/exercises">Exercises</NavLink>
+        <NavLink to="/muscle-groups">Muscle Groups</NavLink>
       </nav>
       <hr />
       <Outlet />
