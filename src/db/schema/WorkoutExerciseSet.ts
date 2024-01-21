@@ -6,37 +6,37 @@
 //   isComplete: boolean;
 // };
 
-import { tableNames } from "../constants";
+import { WorkoutExerciseSetTable, WorkoutExerciseTable } from "../constants";
 
 export const create = `
-CREATE TABLE IF NOT EXISTS ${tableNames.WorkoutExerciseSet}(
-  id INTEGER PRIMARY KEY AUTOINCREMENT,
-  WorkoutExerciseInstanceID INTEGER NOT NULL,
-  SortOrder INTEGER NOT NULL,
-  Reps INTEGER,
-  Weight REAL,
-  Time REAL,
-  Distance REAL,
-  FOREIGN KEY (WorkoutExerciseInstanceID) REFERENCES ${tableNames.WorkoutExercise}(id)
+CREATE TABLE IF NOT EXISTS ${WorkoutExerciseSetTable.name}(
+  ${WorkoutExerciseSetTable.cols.id} INTEGER PRIMARY KEY AUTOINCREMENT,
+  ${WorkoutExerciseSetTable.cols.workout_exercise_instance_id} INTEGER NOT NULL,
+  ${WorkoutExerciseSetTable.cols.sort_order} INTEGER NOT NULL,
+  ${WorkoutExerciseSetTable.cols.reps} INTEGER,
+  ${WorkoutExerciseSetTable.cols.weight} REAL,
+  ${WorkoutExerciseSetTable.cols.time} REAL,
+  ${WorkoutExerciseSetTable.cols.distance} REAL,
+  FOREIGN KEY (${WorkoutExerciseSetTable.cols.workout_exercise_instance_id}) REFERENCES ${WorkoutExerciseTable.name}(${WorkoutExerciseTable.cols.id})
 );
 `;
 
 export const insert = (
-  workoutExerciseInstanceId,
-  sortOrder,
-  reps,
-  weight,
-  time,
-  distance
+  workoutExerciseInstanceId: number,
+  sortOrder: number,
+  reps: number | undefined,
+  weight: number | undefined,
+  time: number | undefined,
+  distance: number | undefined
 ) => {
   // TODO: Validate set values for correct numerical type against exercise type
-  return `INSERT INTO ${tableNames.WorkoutExerciseSet}(
-    WorkoutExerciseInstanceID,
-    SortOrder,
-    Reps,
-    Weight,
-    Time,
-    Distance
+  return `INSERT INTO ${WorkoutExerciseSetTable.name}(
+    ${WorkoutExerciseSetTable.cols.workout_exercise_instance_id},
+    ${WorkoutExerciseSetTable.cols.sort_order},
+    ${WorkoutExerciseSetTable.cols.reps},
+    ${WorkoutExerciseSetTable.cols.weight},
+    ${WorkoutExerciseSetTable.cols.time},
+    ${WorkoutExerciseSetTable.cols.distance}
   ) VALUES(
     ${workoutExerciseInstanceId},
     ${sortOrder},

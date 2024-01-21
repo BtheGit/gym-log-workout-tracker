@@ -1,4 +1,4 @@
-import { tableNames } from "../constants";
+import { ProgramWorkoutTable, ProgramTable, WorkoutTable } from "../constants";
 
 export type IProgramWorkout = {
   programId: number;
@@ -7,14 +7,14 @@ export type IProgramWorkout = {
   day: number;
 };
 
-export const create = `CREATE TABLE IF NOT EXISTS ${tableNames.ProgramWorkout}(
-    ProgramID INTEGER NOT NULL,
-    WorkoutID INTEGER NOT NULL,
-    Week INTEGER NOT NULL,
-    Day INTEGER NOT NULL,
-    FOREIGN KEY (ProgramID) REFERENCES ${tableNames.Program}(id),
-    FOREIGN KEY (WorkoutID) REFERENCES ${tableNames.Workout}(id),
-    PRIMARY KEY (ProgramID, WorkoutID)
+export const create = `CREATE TABLE IF NOT EXISTS ${ProgramWorkoutTable.name}(
+    ${ProgramWorkoutTable.cols.program_id} INTEGER NOT NULL,
+    ${ProgramWorkoutTable.cols.workout_id} INTEGER NOT NULL,
+    ${ProgramWorkoutTable.cols.week} INTEGER NOT NULL,
+    ${ProgramWorkoutTable.cols.day} INTEGER NOT NULL,
+    FOREIGN KEY (${ProgramWorkoutTable.cols.program_id}) REFERENCES ${ProgramTable.name}(${ProgramTable.cols.id}),
+    FOREIGN KEY (${ProgramWorkoutTable.cols.workout_id}) REFERENCES ${WorkoutTable.name}(${WorkoutTable.cols.id}),
+    PRIMARY KEY (${ProgramWorkoutTable.cols.program_id}, ${ProgramWorkoutTable.cols.workout_id})
 )`;
 
 export const insert = (
@@ -23,10 +23,15 @@ export const insert = (
   week: number,
   day: number
 ) => `
-    INSERT INTO ${tableNames.ProgramWorkout}(ProgramID, WorkoutID, Week, Day) VALUES(
-        ${programId},
-        ${workoutId},
-        ${week},
-        ${day}
-    );
+  INSERT INTO ${ProgramWorkoutTable.name}(
+    ${ProgramWorkoutTable.cols.program_id}, 
+    ${ProgramWorkoutTable.cols.workout_id}, 
+    ${ProgramWorkoutTable.cols.week}, 
+    ${ProgramWorkoutTable.cols.day}
+    ) VALUES(
+      ${programId},
+      ${workoutId},
+      ${week},
+      ${day}
+  );
 `;

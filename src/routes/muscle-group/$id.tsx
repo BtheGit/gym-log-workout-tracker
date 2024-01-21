@@ -20,9 +20,9 @@ export function component() {
       <h4>Exercises</h4>
       <ul>
         {muscleGroup.exercises.map((exercise) => (
-          <li key={exercise.ExerciseID}>
-            <Link to={`/exercise/$id`} params={{ id: exercise.ExerciseID }}>
-              {exercise.ExerciseName}
+          <li key={exercise.exercise_id}>
+            <Link to={`/exercise/$id`} params={{ id: exercise.exercise_id }}>
+              {exercise.exercise_name}
             </Link>
           </li>
         ))}

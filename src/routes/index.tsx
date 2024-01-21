@@ -22,6 +22,7 @@ export function component() {
     const end = performance.now();
     console.log(`Database exported in ${end - start}ms`);
   };
+
   return (
     <>
       <button onClick={onSeedHandler}>Seed DB</button>
