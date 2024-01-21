@@ -1,8 +1,9 @@
-import { useExercises } from "./hooks";
-import "./Exercises.css";
+import { useLoaderData, Link } from "react-router-dom";
+import { getExercises } from "../db/queries";
+import "./exercises.css";
 
-export const Exercises = () => {
-  const exercises = useExercises();
+export const component = () => {
+  const exercises = useLoaderData();
 
   if (!exercises) {
     return null;
@@ -20,16 +21,16 @@ export const Exercises = () => {
               )}
 
               <div className="item-content">
-                <a href={`/exercise/${exercise.ExerciseID}`}>
+                <Link to={`/exercise/${exercise.ExerciseID}`}>
                   <h2>{exercise.ExerciseName}</h2>
-                </a>
+                </Link>
                 {/* Insert rendered description (md -> html) */}
                 <h4>Muscle Groups</h4>
                 <ul>
                   {exercise.MuscleGroups.map((muscleGroup, idx) => (
-                    <a href={`/muscle-group/${muscleGroup.id}`} key={idx}>
+                    <Link to={`/muscle-group/${muscleGroup.id}`} key={idx}>
                       {muscleGroup.name}
-                    </a>
+                    </Link>
                   ))}
                 </ul>
               </div>
@@ -39,4 +40,8 @@ export const Exercises = () => {
       ))}
     </>
   );
+};
+
+export const loader = async () => {
+  return await getExercises();
 };

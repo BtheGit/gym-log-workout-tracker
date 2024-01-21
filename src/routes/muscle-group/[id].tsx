@@ -1,9 +1,8 @@
-import { useMuscleGroup } from "./hooks";
-import { useParams } from "react-router-dom";
+import { getMuscleGroupById } from "../../db/queries";
+import { useLoaderData, Link } from "react-router-dom";
 
-export const MuscleGroup = () => {
-  const id = useParams<{ id: string }>().id!;
-  const muscleGroup = useMuscleGroup(id);
+export const component = () => {
+  const muscleGroup = useLoaderData();
 
   // NOTE: It might make sense to just query muscle groups and find by id, however, with the DB local and built in caching, hard to really care too much until we hit issues.
   if (!muscleGroup) {
@@ -17,12 +16,16 @@ export const MuscleGroup = () => {
       <ul>
         {muscleGroup.exercises.map((exercise) => (
           <li key={exercise.ExerciseID}>
-            <a href={`/exercise/${exercise.ExerciseID}`}>
+            <Link to={`/exercise/${exercise.ExerciseID}`}>
               {exercise.ExerciseName}
-            </a>
+            </Link>
           </li>
         ))}
       </ul>
     </>
   );
+};
+
+export const loader = async (id) => {
+  return await getMuscleGroupById(id);
 };

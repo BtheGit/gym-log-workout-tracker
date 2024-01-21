@@ -1,10 +1,8 @@
-import { useDatabase } from "../db/DatabaseContext";
 import { seedDB } from "../db/seed";
 import { createViews } from "../db/views/index";
+import { db } from "../db/db";
 
-export const Home = () => {
-  const db = useDatabase();
-
+export const component = () => {
   const onSeedHandler = async () => {
     const start = performance.now();
     await seedDB(db);

@@ -15,6 +15,18 @@ export type IExercise = {
   muscleGroupIds: string[];
 };
 
+export const Schema = {
+  id: "TEXT PRIMARY KEY NOT NULL",
+  Name: "TEXT NOT NULL",
+  Description: "TEXT",
+  ThumbnailUrl: "TEXT",
+  VideoUrl: "TEXT",
+  Reps: "INTEGER NOT NULL",
+  Weight: "INTEGER NOT NULL",
+  Time: "INTEGER NOT NULL",
+  Distance: "INTEGER NOT NULL",
+};
+
 export const create = `CREATE TABLE IF NOT EXISTS ${tableNames.Exercise} (
   id TEXT PRIMARY KEY NOT NULL,
   Name TEXT NOT NULL,

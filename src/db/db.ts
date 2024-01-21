@@ -80,3 +80,5 @@ export const getDatabaseService = async () => {
   }
   return instance;
 };
+
+export const db = await getDatabaseService();

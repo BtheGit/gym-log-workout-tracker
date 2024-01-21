@@ -1,15 +1,9 @@
-import {
-  createBrowserRouter,
-  Routes,
-  Route,
-  NavLink,
-  Outlet,
-} from "react-router-dom";
-import { Home } from "./pages/Home";
-import { Exercises } from "./components/Exercises";
-import { Exercise } from "./components/Exercise";
-import { MuscleGroup } from "./components/MuscleGroup";
-import { MuscleGroups } from "./components/MuscleGroups";
+import { createBrowserRouter, NavLink, Outlet } from "react-router-dom";
+import * as Home from "./routes";
+import * as Exercises from "./routes/exercises";
+import * as Exercise from "./routes/exercise/[id]";
+import * as MuscleGroup from "./routes/muscle-group/[id]";
+import * as MuscleGroups from "./routes/muscle-groups";
 
 const Layout = () => {
   return (
@@ -25,18 +19,31 @@ const Layout = () => {
   );
 };
 
-const Root = () => {
-  return (
-    <Routes>
-      <Route element={<Layout />}>
-        <Route path="/" element={<Home />} />
-        <Route path="/exercises" element={<Exercises />} />
-        <Route path="/exercise/:id" element={<Exercise />} />
-        <Route path="/muscle-groups" element={<MuscleGroups />} />
-        <Route path="/muscle-group/:id" element={<MuscleGroup />} />
-      </Route>
-    </Routes>
-  );
-};
-
-export const router = createBrowserRouter([{ path: "*", Component: Root }]);
+export const router = createBrowserRouter([
+  { path: "/", Component: Home.component },
+  {
+    path: "/muscle-groups",
+    Component: MuscleGroups.component,
+    loader: MuscleGroups.loader,
+  },
+  {
+    path: "/muscle-group/:id",
+    Component: MuscleGroup.component,
+    loader: async ({ params }) => {
+      return await MuscleGroup.loader(params.id);
+    },
+  },
+  {
+    path: "/exercises",
+    Component: Exercises.component,
+    loader: Exercises.loader,
+  },
+  {
+    path: "/exercise/:id",
+    Component: Exercise.component,
+    loader: async ({ params }) => {
+      return await Exercise.loader(params.id);
+    },
+  },
+  { path: "*", Component: Layout },
+]);

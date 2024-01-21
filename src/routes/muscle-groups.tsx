@@ -1,7 +1,8 @@
-import { useMuscleGroups } from "./hooks";
+import { getMuscleGroups } from "../db/queries";
+import { useLoaderData, Link } from "react-router-dom";
 
-export const MuscleGroups = () => {
-  const muscleGroups = useMuscleGroups();
+export const component = () => {
+  const muscleGroups = useLoaderData(); // TODO: type this
 
   if (!muscleGroups) {
     return null;
@@ -15,9 +16,9 @@ export const MuscleGroups = () => {
           <ul className="list">
             <li className="list-item">
               <div className="item-content">
-                <a href={`/muscle-group/${muscleGroup.id}`}>
+                <Link to={`/muscle-group/${muscleGroup.id}`}>
                   <h2>{muscleGroup.name}</h2>
-                </a>
+                </Link>
               </div>
             </li>
           </ul>
@@ -25,4 +26,8 @@ export const MuscleGroups = () => {
       ))}
     </>
   );
+};
+
+export const loader = async () => {
+  return await getMuscleGroups();
 };

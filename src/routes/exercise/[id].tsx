@@ -1,13 +1,13 @@
-import { useParams } from "react-router-dom";
-import { useExercise } from "./hooks";
+import { useLoaderData, Link } from "react-router-dom";
+import { getExerciseById } from "../../db/queries";
 
-export const Exercise = () => {
-  const id = useParams<{ id: string }>().id!;
-  const exercise = useExercise(id);
+export const component = () => {
+  const exercise = useLoaderData();
 
   if (!exercise) {
     return null;
   }
+
   return (
     <>
       {exercise.ThumbnailUrl && (
@@ -22,9 +22,9 @@ export const Exercise = () => {
           {exercise.MuscleGroups.map(
             (muscleGroup: { id: string; name: string }) => (
               <li key={muscleGroup.id}>
-                <a href={`/muscle-group/${muscleGroup.id}`}>
+                <Link to={`/muscle-group/${muscleGroup.id}`}>
                   {muscleGroup.name}
-                </a>
+                </Link>
               </li>
             )
           )}
@@ -32,4 +32,8 @@ export const Exercise = () => {
       </div>
     </>
   );
+};
+
+export const loader = async (id) => {
+  return await getExerciseById(id);
 };
