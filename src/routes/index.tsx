@@ -1,8 +1,13 @@
 import { seedDB } from "../db/seed";
 import { createViews } from "../db/views/index";
 import { db } from "../db/db";
+import { FileRoute } from "@tanstack/react-router";
 
-export const component = () => {
+export const Route = new FileRoute("/").createRoute({
+  component,
+});
+
+export function component() {
   const onSeedHandler = async () => {
     const start = performance.now();
     await seedDB(db);
@@ -23,4 +28,4 @@ export const component = () => {
       <button onClick={onExportHandler}>Export DB</button>
     </>
   );
-};
+}

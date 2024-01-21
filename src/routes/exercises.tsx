@@ -1,9 +1,14 @@
-import { useLoaderData, Link } from "react-router-dom";
+import { FileRoute, Link } from "@tanstack/react-router";
 import { getExercises } from "../db/queries";
 import "./exercises.css";
 
-export const component = () => {
-  const exercises = useLoaderData();
+export const Route = new FileRoute("/exercises").createRoute({
+  component,
+  loader,
+});
+
+export function component() {
+  const exercises = Route.useLoaderData();
 
   if (!exercises) {
     return null;
@@ -21,14 +26,18 @@ export const component = () => {
               )}
 
               <div className="item-content">
-                <Link to={`/exercise/${exercise.ExerciseID}`}>
+                <Link to={`/exercise/$id`} params={{ id: exercise.ExerciseID }}>
                   <h2>{exercise.ExerciseName}</h2>
                 </Link>
                 {/* Insert rendered description (md -> html) */}
                 <h4>Muscle Groups</h4>
                 <ul>
                   {exercise.MuscleGroups.map((muscleGroup, idx) => (
-                    <Link to={`/muscle-group/${muscleGroup.id}`} key={idx}>
+                    <Link
+                      to={`/muscle-group/$id`}
+                      params={{ id: muscleGroup.id }}
+                      key={idx}
+                    >
                       {muscleGroup.name}
                     </Link>
                   ))}
@@ -40,8 +49,8 @@ export const component = () => {
       ))}
     </>
   );
-};
+}
 
-export const loader = async () => {
+export async function loader() {
   return await getExercises();
-};
+}

@@ -1,8 +1,13 @@
 import { getMuscleGroupById } from "../../db/queries";
-import { useLoaderData, Link } from "react-router-dom";
+import { FileRoute, Link } from "@tanstack/react-router";
 
-export const component = () => {
-  const muscleGroup = useLoaderData();
+export const Route = new FileRoute("/muscle-group/$id").createRoute({
+  component,
+  loader,
+});
+
+export function component() {
+  const muscleGroup = Route.useLoaderData();
 
   // NOTE: It might make sense to just query muscle groups and find by id, however, with the DB local and built in caching, hard to really care too much until we hit issues.
   if (!muscleGroup) {
@@ -16,7 +21,7 @@ export const component = () => {
       <ul>
         {muscleGroup.exercises.map((exercise) => (
           <li key={exercise.ExerciseID}>
-            <Link to={`/exercise/${exercise.ExerciseID}`}>
+            <Link to={`/exercise/$id`} params={{ id: exercise.ExerciseID }}>
               {exercise.ExerciseName}
             </Link>
           </li>
@@ -24,8 +29,8 @@ export const component = () => {
       </ul>
     </>
   );
-};
+}
 
-export const loader = async (id) => {
+export async function loader({ params: { id } }) {
   return await getMuscleGroupById(id);
-};
+}

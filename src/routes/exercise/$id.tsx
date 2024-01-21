@@ -1,8 +1,13 @@
-import { useLoaderData, Link } from "react-router-dom";
+import { FileRoute, Link } from "@tanstack/react-router";
 import { getExerciseById } from "../../db/queries";
 
-export const component = () => {
-  const exercise = useLoaderData();
+export const Route = new FileRoute("/exercise/$id").createRoute({
+  component,
+  loader,
+});
+
+export function component() {
+  const exercise = Route.useLoaderData();
 
   if (!exercise) {
     return null;
@@ -22,7 +27,7 @@ export const component = () => {
           {exercise.MuscleGroups.map(
             (muscleGroup: { id: string; name: string }) => (
               <li key={muscleGroup.id}>
-                <Link to={`/muscle-group/${muscleGroup.id}`}>
+                <Link to={`/muscle-group/$id`} params={{ id: muscleGroup.id }}>
                   {muscleGroup.name}
                 </Link>
               </li>
@@ -32,8 +37,8 @@ export const component = () => {
       </div>
     </>
   );
-};
+}
 
-export const loader = async (id) => {
+export async function loader({ params: { id } }) {
   return await getExerciseById(id);
-};
+}
