@@ -6,11 +6,11 @@ import {
 
 export const create = `CREATE TABLE IF NOT EXISTS ${WorkoutExerciseTable.name}(
     ${WorkoutExerciseTable.cols.id} INTEGER PRIMARY KEY AUTOINCREMENT,
-    ${WorkoutExerciseTable.cols.WorkoutID} INTEGER NOT NULL,
-    ${WorkoutExerciseTable.cols.ExerciseID} TEXT NOT NULL,
-    ${WorkoutExerciseTable.cols.SortOrder} INTEGER NOT NULL,
-    FOREIGN KEY (${WorkoutExerciseTable.cols.WorkoutID}) REFERENCES ${WorkoutTable.name}(${WorkoutTable.cols.id}),
-    FOREIGN KEY (${WorkoutExerciseTable.cols.ExerciseID}) REFERENCES ${ExerciseTable.name}(${ExerciseTable.cols.id})
+    ${WorkoutExerciseTable.cols.workout_id} INTEGER NOT NULL,
+    ${WorkoutExerciseTable.cols.exercise_id} TEXT NOT NULL,
+    ${WorkoutExerciseTable.cols.sort_order} INTEGER NOT NULL,
+    FOREIGN KEY (${WorkoutExerciseTable.cols.workout_id}) REFERENCES ${WorkoutTable.name}(${WorkoutTable.cols.id}),
+    FOREIGN KEY (${WorkoutExerciseTable.cols.exercise_id}) REFERENCES ${ExerciseTable.name}(${ExerciseTable.cols.id})
 );`;
 
 // TODO: Validate that exercise exists
@@ -20,9 +20,9 @@ export const insertReturningInstanceId = (
   sortOrder: number
 ) => `
     INSERT INTO ${WorkoutExerciseTable.name}(
-      ${WorkoutExerciseTable.cols.WorkoutID}, 
-      ${WorkoutExerciseTable.cols.ExerciseID}, 
-      ${WorkoutExerciseTable.cols.SortOrder}
+      ${WorkoutExerciseTable.cols.workout_id}, 
+      ${WorkoutExerciseTable.cols.exercise_id}, 
+      ${WorkoutExerciseTable.cols.sort_order}
     ) 
     VALUES(
       ${workoutId}, 

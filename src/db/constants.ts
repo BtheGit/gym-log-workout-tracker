@@ -15,14 +15,14 @@ export const ExerciseTable = {
   name: `v${version}__Exercise`,
   cols: {
     id: "id",
-    Name: "Name",
-    Description: "Description",
-    ThumbnailUrl: "ThumbnailUrl",
-    VideoUrl: "VideoUrl",
-    Reps: "Reps",
-    Weight: "Weight",
-    Time: "Time",
-    Distance: "Distance",
+    name: "name",
+    description: "description",
+    thumbnail_url: "thumbnail_url",
+    video_url: "video_url",
+    reps: "reps",
+    weight: "weight",
+    time: "time",
+    distance: "distance",
   },
 };
 
@@ -37,8 +37,8 @@ export const MuscleGroupTable = {
 export const ExerciseMuscleGroupTable = {
   name: `v${version}__ExerciseMuscleGroup`,
   cols: {
-    ExerciseID: "ExerciseID",
-    MuscleGroupID: "MuscleGroupID",
+    exercise_id: "exercise_id",
+    muscle_group_id: "muscle_group_id",
   },
 };
 
@@ -46,19 +46,19 @@ export const ProgramTable = {
   name: `v${version}__Program`,
   cols: {
     id: "id",
-    Name: "Name",
-    Description: "Description",
-    Author: "Author",
+    name: "name",
+    description: "description",
+    author: "author",
   },
 };
 
 export const ProgramWorkoutTable = {
   name: `v${version}__ProgramWorkout`,
   cols: {
-    ProgramID: "ProgramID",
-    WorkoutID: "WorkoutID",
-    Week: "Week",
-    Day: "Day",
+    program_id: "program_id",
+    workout_id: "workout_id",
+    week: "week",
+    day: "day",
   },
 };
 
@@ -67,7 +67,7 @@ export const WorkoutTable = {
   cols: {
     id: "id",
     Name: "Name",
-    Description: "Description",
+    description: "description",
   },
 };
 
@@ -75,9 +75,9 @@ export const WorkoutExerciseTable = {
   name: `v${version}__WorkoutExercise`,
   cols: {
     id: "id",
-    WorkoutID: "WorkoutID",
-    ExerciseID: "ExerciseID",
-    SortOrder: "SortOrder",
+    workout_id: "workout_id",
+    exercise_id: "exercise_id",
+    sort_order: "sort_order",
   },
 };
 
@@ -85,29 +85,29 @@ export const WorkoutExerciseSetTable = {
   name: `v${version}__WorkoutExerciseSet`,
   cols: {
     id: "id",
-    WorkoutExerciseInstanceID: "WorkoutExerciseInstanceID",
-    Reps: "Reps",
-    Weight: "Weight",
-    Time: "Time",
-    Distance: "Distance",
-    SortOrder: "SortOrder",
+    workout_exercise_instance_id: "workout_exercise_instance_id",
+    reps: "reps",
+    weight: "weight",
+    time: "time",
+    distance: "distance",
+    sort_order: "sort_order",
   },
 };
 
 export const ExerciseWithMuscleGroupsView = {
   name: `v${version}__vExerciseWithMuscleGroups`,
   cols: {
-    ExerciseID: "ExerciseID",
-    ExerciseName: "ExerciseName",
-    ExerciseDescription: "ExerciseDescription",
-    ThumbnailUrl: "ThumbnailUrl",
-    VideoUrl: "VideoUrl",
-    Reps: "Reps",
-    Weight: "Weight",
-    Time: "Time",
-    Distance: "Distance",
-    MuscleGroups: {
-      name: "MuscleGroups",
+    exercise_id: "exercise_id",
+    exercise_name: "exercise_name",
+    exercise_description: "exercise_description",
+    thumbnail_url: "thumbnail_url",
+    video_url: "video_url",
+    reps: "reps",
+    weight: "weight",
+    time: "time",
+    distance: "distance",
+    muscle_groups: {
+      name: "muscle_groups",
       cols: {
         id: "id",
         name: "name",
@@ -119,13 +119,13 @@ export const ExerciseWithMuscleGroupsView = {
 export const MuscleGroupWithExercisesView = {
   name: `v${version}__vMuscleGroupWithExercises`,
   cols: {
-    MuscleGroupID: "MuscleGroupID",
-    MuscleGroupName: "MuscleGroupName",
-    Exercises: {
-      name: "Exercises",
+    muscle_group_id: "muscle_group_id",
+    muscle_group_name: "muscle_group_name",
+    exercises: {
+      name: "exercises",
       cols: {
-        ExerciseID: "ExerciseID",
-        ExerciseName: "ExerciseName",
+        exercise_id: "exercise_id",
+        exercise_name: "exercise_name",
       },
     },
   },

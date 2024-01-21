@@ -8,13 +8,13 @@ export type IProgramWorkout = {
 };
 
 export const create = `CREATE TABLE IF NOT EXISTS ${ProgramWorkoutTable.name}(
-    ${ProgramWorkoutTable.cols.ProgramID} INTEGER NOT NULL,
-    ${ProgramWorkoutTable.cols.WorkoutID} INTEGER NOT NULL,
-    ${ProgramWorkoutTable.cols.Week} INTEGER NOT NULL,
-    ${ProgramWorkoutTable.cols.Day} INTEGER NOT NULL,
-    FOREIGN KEY (${ProgramWorkoutTable.cols.ProgramID}) REFERENCES ${ProgramTable.name}(${ProgramTable.cols.id}),
-    FOREIGN KEY (${ProgramWorkoutTable.cols.WorkoutID}) REFERENCES ${WorkoutTable.name}(${WorkoutTable.cols.id}),
-    PRIMARY KEY (${ProgramWorkoutTable.cols.ProgramID}, ${ProgramWorkoutTable.cols.WorkoutID})
+    ${ProgramWorkoutTable.cols.program_id} INTEGER NOT NULL,
+    ${ProgramWorkoutTable.cols.workout_id} INTEGER NOT NULL,
+    ${ProgramWorkoutTable.cols.week} INTEGER NOT NULL,
+    ${ProgramWorkoutTable.cols.day} INTEGER NOT NULL,
+    FOREIGN KEY (${ProgramWorkoutTable.cols.program_id}) REFERENCES ${ProgramTable.name}(${ProgramTable.cols.id}),
+    FOREIGN KEY (${ProgramWorkoutTable.cols.workout_id}) REFERENCES ${WorkoutTable.name}(${WorkoutTable.cols.id}),
+    PRIMARY KEY (${ProgramWorkoutTable.cols.program_id}, ${ProgramWorkoutTable.cols.workout_id})
 )`;
 
 export const insert = (
@@ -24,10 +24,10 @@ export const insert = (
   day: number
 ) => `
   INSERT INTO ${ProgramWorkoutTable.name}(
-    ${ProgramWorkoutTable.cols.ProgramID}, 
-    ${ProgramWorkoutTable.cols.WorkoutID}, 
-    ${ProgramWorkoutTable.cols.Week}, 
-    ${ProgramWorkoutTable.cols.Day}
+    ${ProgramWorkoutTable.cols.program_id}, 
+    ${ProgramWorkoutTable.cols.workout_id}, 
+    ${ProgramWorkoutTable.cols.week}, 
+    ${ProgramWorkoutTable.cols.day}
     ) VALUES(
       ${programId},
       ${workoutId},

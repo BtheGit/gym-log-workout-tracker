@@ -3,9 +3,6 @@ import { createViews } from "../db/views/index";
 import { db } from "../db/db";
 import { FileRoute } from "@tanstack/react-router";
 
-await seedDB(db);
-await createViews(db);
-
 export const Route = new FileRoute("/").createRoute({
   component,
 });

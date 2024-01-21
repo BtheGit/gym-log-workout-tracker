@@ -17,14 +17,14 @@ export type IExercise = {
 
 export const create = `CREATE TABLE IF NOT EXISTS ${ExerciseTable.name} (
   ${ExerciseTable.cols.id} TEXT PRIMARY KEY NOT NULL,
-  ${ExerciseTable.cols.Name} TEXT NOT NULL,
-  ${ExerciseTable.cols.Description} TEXT,
-  ${ExerciseTable.cols.ThumbnailUrl} TEXT,
-  ${ExerciseTable.cols.VideoUrl} TEXT,
-  ${ExerciseTable.cols.Reps} INTEGER NOT NULL,
-  ${ExerciseTable.cols.Weight} INTEGER NOT NULL,
-  ${ExerciseTable.cols.Time} INTEGER NOT NULL,
-  ${ExerciseTable.cols.Distance} INTEGER NOT NULL
+  ${ExerciseTable.cols.name} TEXT NOT NULL,
+  ${ExerciseTable.cols.description} TEXT,
+  ${ExerciseTable.cols.thumbnail_url} TEXT,
+  ${ExerciseTable.cols.video_url} TEXT,
+  ${ExerciseTable.cols.reps} INTEGER NOT NULL,
+  ${ExerciseTable.cols.weight} INTEGER NOT NULL,
+  ${ExerciseTable.cols.time} INTEGER NOT NULL,
+  ${ExerciseTable.cols.distance} INTEGER NOT NULL
 );
 `;
 
@@ -34,14 +34,14 @@ export const populateEach = exercises.map((value) => ({
   sql: `
   INSERT INTO ${ExerciseTable.name}(
     ${ExerciseTable.cols.id},
-    ${ExerciseTable.cols.Name},
-    ${ExerciseTable.cols.Description},
-    ${ExerciseTable.cols.ThumbnailUrl},
-    ${ExerciseTable.cols.VideoUrl},
-    ${ExerciseTable.cols.Reps},
-    ${ExerciseTable.cols.Weight},
-    ${ExerciseTable.cols.Time},
-    ${ExerciseTable.cols.Distance}
+    ${ExerciseTable.cols.name},
+    ${ExerciseTable.cols.description},
+    ${ExerciseTable.cols.thumbnail_url},
+    ${ExerciseTable.cols.video_url},
+    ${ExerciseTable.cols.reps},
+    ${ExerciseTable.cols.weight},
+    ${ExerciseTable.cols.time},
+    ${ExerciseTable.cols.distance}
     ) VALUES (
       '${value.id}',
       '${value.name}',
@@ -61,14 +61,14 @@ export const populateAll = `
     .map(
       (exercise) => `INSERT INTO ${ExerciseTable.name}(
         ${ExerciseTable.cols.id},
-        ${ExerciseTable.cols.Name},
-        ${ExerciseTable.cols.Description},
-        ${ExerciseTable.cols.ThumbnailUrl},
-        ${ExerciseTable.cols.VideoUrl},
-        ${ExerciseTable.cols.Reps},
-        ${ExerciseTable.cols.Weight},
-        ${ExerciseTable.cols.Time},
-        ${ExerciseTable.cols.Distance}
+        ${ExerciseTable.cols.name},
+        ${ExerciseTable.cols.description},
+        ${ExerciseTable.cols.thumbnail_url},
+        ${ExerciseTable.cols.video_url},
+        ${ExerciseTable.cols.reps},
+        ${ExerciseTable.cols.weight},
+        ${ExerciseTable.cols.time},
+        ${ExerciseTable.cols.distance}
       ) VALUES (
         '${exercise.id}',
         '${exercise.name}',

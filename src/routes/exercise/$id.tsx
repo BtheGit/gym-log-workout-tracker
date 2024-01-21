@@ -15,16 +15,16 @@ export function component() {
 
   return (
     <>
-      {exercise.ThumbnailUrl && (
-        <img src={exercise.ThumbnailUrl} alt={exercise.ExerciseName} />
+      {exercise.thumbnail_url && (
+        <img src={exercise.thumbnail_url} alt={exercise.exercise_name} />
       )}
 
       <div className="item-content">
-        <h2>{exercise.ExerciseName}</h2>
+        <h2>{exercise.exercise_name}</h2>
         {/* Insert rendered description (md -> html) */}
         <h4>Muscle Groups</h4>
         <ul>
-          {exercise.MuscleGroups.map(
+          {exercise.muscle_groups.map(
             (muscleGroup: { id: string; name: string }) => (
               <li key={muscleGroup.id}>
                 <Link to={`/muscle-group/$id`} params={{ id: muscleGroup.id }}>

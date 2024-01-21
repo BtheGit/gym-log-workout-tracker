@@ -21,18 +21,24 @@ export function component() {
         <div className="list-wrapper" key={idx}>
           <ul className="list">
             <li className="list-item">
-              {exercise.ThumbnailUrl && (
-                <img src={exercise.ThumbnailUrl} alt={exercise.ExerciseName} />
+              {exercise.thumbnail_url && (
+                <img
+                  src={exercise.thumbnail_url}
+                  alt={exercise.exercise_name}
+                />
               )}
 
               <div className="item-content">
-                <Link to={`/exercise/$id`} params={{ id: exercise.ExerciseID }}>
-                  <h2>{exercise.ExerciseName}</h2>
+                <Link
+                  to={`/exercise/$id`}
+                  params={{ id: exercise.exercise_id }}
+                >
+                  <h2>{exercise.exercise_name}</h2>
                 </Link>
                 {/* Insert rendered description (md -> html) */}
                 <h4>Muscle Groups</h4>
                 <ul>
-                  {exercise.MuscleGroups.map((muscleGroup, idx) => (
+                  {exercise.muscle_groups.map((muscleGroup, idx) => (
                     <Link
                       to={`/muscle-group/$id`}
                       params={{ id: muscleGroup.id }}

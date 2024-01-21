@@ -19,10 +19,10 @@ export function component() {
       <h1>{muscleGroup.name}</h1>
       <h4>Exercises</h4>
       <ul>
-        {muscleGroup.Exercises.map((exercise) => (
-          <li key={exercise.ExerciseID}>
-            <Link to={`/exercise/$id`} params={{ id: exercise.ExerciseID }}>
-              {exercise.ExerciseName}
+        {muscleGroup.exercises.map((exercise) => (
+          <li key={exercise.exercise_id}>
+            <Link to={`/exercise/$id`} params={{ id: exercise.exercise_id }}>
+              {exercise.exercise_name}
             </Link>
           </li>
         ))}

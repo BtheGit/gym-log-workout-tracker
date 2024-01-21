@@ -9,13 +9,13 @@ export type IWorkout = {
 export const create = `CREATE TABLE IF NOT EXISTS ${WorkoutTable.name}(
     ${WorkoutTable.cols.id} INTEGER PRIMARY KEY AUTOINCREMENT,
     ${WorkoutTable.cols.Name} TEXT NOT NULL,
-    ${WorkoutTable.cols.Description} TEXT NOT NULL
+    ${WorkoutTable.cols.description} TEXT NOT NULL
 );`;
 
 export const insertReturningId = (workout: IWorkout) => `
   INSERT INTO ${WorkoutTable.name}(
     ${WorkoutTable.cols.Name},
-    ${WorkoutTable.cols.Description}
+    ${WorkoutTable.cols.description}
   ) VALUES (
     '${workout.name}',
     '${workout.description}'

@@ -11,22 +11,22 @@ export const createExerciseWithMuscleGroupsView = `
 DROP VIEW IF EXISTS ${ExerciseWithMuscleGroupsView.name};
 CREATE VIEW ${ExerciseWithMuscleGroupsView.name} AS
 SELECT
-    e.${ExerciseTable.cols.id} AS ${ExerciseWithMuscleGroupsView.cols.ExerciseID},
-    e.${ExerciseTable.cols.Name} AS ${ExerciseWithMuscleGroupsView.cols.ExerciseName},
-    e.${ExerciseTable.cols.Description} AS ${ExerciseWithMuscleGroupsView.cols.ExerciseDescription},
-    e.${ExerciseTable.cols.ThumbnailUrl},
-    e.${ExerciseTable.cols.VideoUrl},
-    e.${ExerciseTable.cols.Reps},
-    e.${ExerciseTable.cols.Weight},
-    e.${ExerciseTable.cols.Time},
-    e.${ExerciseTable.cols.Distance},
-    JSON_GROUP_ARRAY(JSON_OBJECT('${ExerciseWithMuscleGroupsView.cols.MuscleGroups.cols.id}', mg.${MuscleGroupTable.cols.id}, '${ExerciseWithMuscleGroupsView.cols.MuscleGroups.cols.name}', mg.${MuscleGroupTable.cols.name})) AS ${ExerciseWithMuscleGroupsView.cols.MuscleGroups.name}
+    e.${ExerciseTable.cols.id} AS ${ExerciseWithMuscleGroupsView.cols.exercise_id},
+    e.${ExerciseTable.cols.name} AS ${ExerciseWithMuscleGroupsView.cols.exercise_name},
+    e.${ExerciseTable.cols.description} AS ${ExerciseWithMuscleGroupsView.cols.exercise_description},
+    e.${ExerciseTable.cols.thumbnail_url},
+    e.${ExerciseTable.cols.video_url},
+    e.${ExerciseTable.cols.reps},
+    e.${ExerciseTable.cols.weight},
+    e.${ExerciseTable.cols.time},
+    e.${ExerciseTable.cols.distance},
+    JSON_GROUP_ARRAY(JSON_OBJECT('${ExerciseWithMuscleGroupsView.cols.muscle_groups.cols.id}', mg.${MuscleGroupTable.cols.id}, '${ExerciseWithMuscleGroupsView.cols.muscle_groups.cols.name}', mg.${MuscleGroupTable.cols.name})) AS ${ExerciseWithMuscleGroupsView.cols.muscle_groups.name}
 FROM
     ${ExerciseTable.name} e
 JOIN
-    ${ExerciseMuscleGroupTable.name} emg ON e.${ExerciseTable.cols.id} = emg.${ExerciseMuscleGroupTable.cols.ExerciseID}
+    ${ExerciseMuscleGroupTable.name} emg ON e.${ExerciseTable.cols.id} = emg.${ExerciseMuscleGroupTable.cols.exercise_id}
 JOIN
-    ${MuscleGroupTable.name} mg ON emg.${ExerciseMuscleGroupTable.cols.MuscleGroupID} = mg.${MuscleGroupTable.cols.id}
+    ${MuscleGroupTable.name} mg ON emg.${ExerciseMuscleGroupTable.cols.muscle_group_id} = mg.${MuscleGroupTable.cols.id}
 GROUP BY
     e.${ExerciseTable.cols.id};
 
@@ -36,15 +36,15 @@ export const createMuscleGroupWithExercisesView = `
 DROP VIEW IF EXISTS ${MuscleGroupWithExercisesView.name};
 CREATE VIEW ${MuscleGroupWithExercisesView.name} AS
 SELECT
-    mg.${MuscleGroupTable.cols.id} AS ${MuscleGroupWithExercisesView.cols.MuscleGroupID},
-    mg.${MuscleGroupTable.cols.name} AS ${MuscleGroupWithExercisesView.cols.MuscleGroupName},
-    JSON_GROUP_ARRAY(JSON_OBJECT('${MuscleGroupWithExercisesView.cols.Exercises.cols.ExerciseID}', e.${ExerciseTable.cols.id}, '${MuscleGroupWithExercisesView.cols.Exercises.cols.ExerciseName}', e.${ExerciseTable.cols.Name})) AS ${MuscleGroupWithExercisesView.cols.Exercises.name}
+    mg.${MuscleGroupTable.cols.id} AS ${MuscleGroupWithExercisesView.cols.muscle_group_id},
+    mg.${MuscleGroupTable.cols.name} AS ${MuscleGroupWithExercisesView.cols.muscle_group_name},
+    JSON_GROUP_ARRAY(JSON_OBJECT('${MuscleGroupWithExercisesView.cols.exercises.cols.exercise_id}', e.${ExerciseTable.cols.id}, '${MuscleGroupWithExercisesView.cols.exercises.cols.exercise_name}', e.${ExerciseTable.cols.name})) AS ${MuscleGroupWithExercisesView.cols.exercises.name}
 FROM
     ${MuscleGroupTable.name} mg
 JOIN
-    ${ExerciseMuscleGroupTable.name} emg ON mg.${MuscleGroupTable.cols.id} = emg.${ExerciseMuscleGroupTable.cols.MuscleGroupID}
+    ${ExerciseMuscleGroupTable.name} emg ON mg.${MuscleGroupTable.cols.id} = emg.${ExerciseMuscleGroupTable.cols.muscle_group_id}
 JOIN
-    ${ExerciseTable.name} e ON emg.${ExerciseMuscleGroupTable.cols.ExerciseID} = e.${ExerciseTable.cols.id}
+    ${ExerciseTable.name} e ON emg.${ExerciseMuscleGroupTable.cols.exercise_id} = e.${ExerciseTable.cols.id}
 GROUP BY
     mg.${MuscleGroupTable.cols.id};
 `;
