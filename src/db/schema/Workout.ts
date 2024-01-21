@@ -1,4 +1,4 @@
-import { tableNames } from "../constants";
+import { WorkoutTable } from "../constants";
 
 export type IWorkout = {
   name: string;
@@ -6,18 +6,19 @@ export type IWorkout = {
 };
 
 // TODO: Suport author (optional)
-export const create = `CREATE TABLE IF NOT EXISTS ${tableNames.Workout}(
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    Name TEXT NOT NULL,
-    Description TEXT NOT NULL
+export const create = `CREATE TABLE IF NOT EXISTS ${WorkoutTable.name}(
+    ${WorkoutTable.cols.id} INTEGER PRIMARY KEY AUTOINCREMENT,
+    ${WorkoutTable.cols.Name} TEXT NOT NULL,
+    ${WorkoutTable.cols.Description} TEXT NOT NULL
 );`;
 
 export const insertReturningId = (workout: IWorkout) => `
-  INSERT INTO ${tableNames.Workout}(
-    Name,
-    Description
-    ) VALUES (
-      '${workout.name}',
-      '${workout.description}'
-) RETURNING id;
+  INSERT INTO ${WorkoutTable.name}(
+    ${WorkoutTable.cols.Name},
+    ${WorkoutTable.cols.Description}
+  ) VALUES (
+    '${workout.name}',
+    '${workout.description}'
+  )
+  RETURNING ${WorkoutTable.cols.id};
 `;

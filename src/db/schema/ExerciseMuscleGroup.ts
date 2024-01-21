@@ -1,13 +1,17 @@
 import { exercises } from "../data/exercises";
 
-import { tableNames } from "../constants";
+import {
+  ExerciseTable,
+  MuscleGroupTable,
+  ExerciseMuscleGroupTable,
+} from "../constants";
 
-export const create = `CREATE TABLE IF NOT EXISTS ${tableNames.ExerciseMuscleGroup} (
-    ExerciseID INTEGER NOT NULL,
-    MuscleGroupID INTEGER NOT NULL,
-    FOREIGN KEY (ExerciseID) REFERENCES ${tableNames.Exercise}(id),
-    FOREIGN KEY (MuscleGroupID) REFERENCES ${tableNames.MuscleGroup}(id),
-    PRIMARY KEY (ExerciseID, MuscleGroupID)
+export const create = `CREATE TABLE IF NOT EXISTS ${ExerciseMuscleGroupTable.name} (
+    ${ExerciseMuscleGroupTable.cols.ExerciseID} INTEGER NOT NULL,
+    ${ExerciseMuscleGroupTable.cols.MuscleGroupID} INTEGER NOT NULL,
+    FOREIGN KEY (${ExerciseMuscleGroupTable.cols.ExerciseID}) REFERENCES ${ExerciseTable.name}(${ExerciseTable.cols.id}),
+    FOREIGN KEY (${ExerciseMuscleGroupTable.cols.MuscleGroupID}) REFERENCES ${MuscleGroupTable.name}(${MuscleGroupTable.cols.id}),
+    PRIMARY KEY (${ExerciseMuscleGroupTable.cols.ExerciseID}, ${ExerciseMuscleGroupTable.cols.MuscleGroupID})
 );`;
 
 export const populateAll = `
@@ -16,7 +20,7 @@ export const populateAll = `
       .map((exercise) =>
         exercise.muscleGroupIds.map(
           (muscleGroup) =>
-            `INSERT INTO ${tableNames.ExerciseMuscleGroup}(ExerciseID, MuscleGroupID) VALUES('${exercise.id}', '${muscleGroup}');`
+            `INSERT INTO ${ExerciseMuscleGroupTable.name}(${ExerciseMuscleGroupTable.cols.ExerciseID}, ${ExerciseMuscleGroupTable.cols.MuscleGroupID}) VALUES('${exercise.id}', '${muscleGroup}');`
         )
       )
       .flat()

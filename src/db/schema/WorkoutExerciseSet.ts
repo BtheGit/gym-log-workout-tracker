@@ -6,37 +6,37 @@
 //   isComplete: boolean;
 // };
 
-import { tableNames } from "../constants";
+import { WorkoutExerciseSetTable, WorkoutExerciseTable } from "../constants";
 
 export const create = `
-CREATE TABLE IF NOT EXISTS ${tableNames.WorkoutExerciseSet}(
-  id INTEGER PRIMARY KEY AUTOINCREMENT,
-  WorkoutExerciseInstanceID INTEGER NOT NULL,
-  SortOrder INTEGER NOT NULL,
-  Reps INTEGER,
-  Weight REAL,
-  Time REAL,
-  Distance REAL,
-  FOREIGN KEY (WorkoutExerciseInstanceID) REFERENCES ${tableNames.WorkoutExercise}(id)
+CREATE TABLE IF NOT EXISTS ${WorkoutExerciseSetTable.name}(
+  ${WorkoutExerciseSetTable.cols.id} INTEGER PRIMARY KEY AUTOINCREMENT,
+  ${WorkoutExerciseSetTable.cols.WorkoutExerciseInstanceID} INTEGER NOT NULL,
+  ${WorkoutExerciseSetTable.cols.SortOrder} INTEGER NOT NULL,
+  ${WorkoutExerciseSetTable.cols.Reps} INTEGER,
+  ${WorkoutExerciseSetTable.cols.Weight} REAL,
+  ${WorkoutExerciseSetTable.cols.Time} REAL,
+  ${WorkoutExerciseSetTable.cols.Distance} REAL,
+  FOREIGN KEY (${WorkoutExerciseSetTable.cols.WorkoutExerciseInstanceID}) REFERENCES ${WorkoutExerciseTable.name}(${WorkoutExerciseTable.cols.id})
 );
 `;
 
 export const insert = (
-  workoutExerciseInstanceId,
-  sortOrder,
-  reps,
-  weight,
-  time,
-  distance
+  workoutExerciseInstanceId: number,
+  sortOrder: number,
+  reps: number,
+  weight: number,
+  time: number,
+  distance: number
 ) => {
   // TODO: Validate set values for correct numerical type against exercise type
-  return `INSERT INTO ${tableNames.WorkoutExerciseSet}(
-    WorkoutExerciseInstanceID,
-    SortOrder,
-    Reps,
-    Weight,
-    Time,
-    Distance
+  return `INSERT INTO ${WorkoutExerciseSetTable.name}(
+    ${WorkoutExerciseSetTable.cols.WorkoutExerciseInstanceID},
+    ${WorkoutExerciseSetTable.cols.SortOrder},
+    ${WorkoutExerciseSetTable.cols.Reps},
+    ${WorkoutExerciseSetTable.cols.Weight},
+    ${WorkoutExerciseSetTable.cols.Time},
+    ${WorkoutExerciseSetTable.cols.Distance}
   ) VALUES(
     ${workoutExerciseInstanceId},
     ${sortOrder},

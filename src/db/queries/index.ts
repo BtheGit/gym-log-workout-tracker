@@ -1,4 +1,8 @@
 import { db } from "../db";
+import {
+  ExerciseWithMuscleGroupsView,
+  MuscleGroupWithExercisesView,
+} from "../constants";
 
 type IExerciseView = {
   ExerciseID: string;
@@ -21,23 +25,25 @@ export const getExercises = async () => {
   const result = await db.exec({
     sql: `
   SELECT
-    ExerciseID,
-    ExerciseName,
-    ExerciseDescription,
-    ThumbnailUrl,
-    VideoUrl,
-    Reps,
-    Weight,
-    Time,
-    Distance,
-    json_extract(MuscleGroups, '$') AS MuscleGroups
+    ${ExerciseWithMuscleGroupsView.cols.ExerciseID},
+    ${ExerciseWithMuscleGroupsView.cols.ExerciseName},
+    ${ExerciseWithMuscleGroupsView.cols.ExerciseDescription},
+    ${ExerciseWithMuscleGroupsView.cols.ThumbnailUrl},
+    ${ExerciseWithMuscleGroupsView.cols.VideoUrl},
+    ${ExerciseWithMuscleGroupsView.cols.Reps},
+    ${ExerciseWithMuscleGroupsView.cols.Weight},
+    ${ExerciseWithMuscleGroupsView.cols.Time},
+    ${ExerciseWithMuscleGroupsView.cols.Distance},
+    json_extract(${ExerciseWithMuscleGroupsView.cols.MuscleGroups.name}, '$') AS ${ExerciseWithMuscleGroupsView.cols.MuscleGroups.name}
   FROM
-    ExerciseWithMuscleGroups;
+    ${ExerciseWithMuscleGroupsView.name};
   `,
   });
   const exercises: IExerciseView[] = result.map(({ columnNames, row }) =>
     row.reduce((acc, curr, idx) => {
-      if (columnNames[idx] === "MuscleGroups") {
+      if (
+        columnNames[idx] === ExerciseWithMuscleGroupsView.cols.MuscleGroups.name
+      ) {
         curr = JSON.parse(curr);
       }
       acc[columnNames[idx]!] = curr;
@@ -51,20 +57,20 @@ export const getExerciseById = async (id: string) => {
   const result = await db.exec({
     sql: `
     SELECT
-      ExerciseID,
-      ExerciseName,
-      ExerciseDescription,
-      ThumbnailUrl,
-      VideoUrl,
-      Reps,
-      Weight,
-      Time,
-      Distance,
-      json_extract(MuscleGroups, '$') AS MuscleGroups
+      ${ExerciseWithMuscleGroupsView.cols.ExerciseID},
+      ${ExerciseWithMuscleGroupsView.cols.ExerciseName},
+      ${ExerciseWithMuscleGroupsView.cols.ExerciseDescription},
+      ${ExerciseWithMuscleGroupsView.cols.ThumbnailUrl},
+      ${ExerciseWithMuscleGroupsView.cols.VideoUrl},
+      ${ExerciseWithMuscleGroupsView.cols.Reps},
+      ${ExerciseWithMuscleGroupsView.cols.Weight},
+      ${ExerciseWithMuscleGroupsView.cols.Time},
+      ${ExerciseWithMuscleGroupsView.cols.Distance},
+      json_extract(${ExerciseWithMuscleGroupsView.cols.MuscleGroups.name}, '$') AS ${ExerciseWithMuscleGroupsView.cols.MuscleGroups.name}
     FROM
-      ExerciseWithMuscleGroups
+      ${ExerciseWithMuscleGroupsView.name}
     WHERE
-      ExerciseID = '${id}';
+      ${ExerciseWithMuscleGroupsView.cols.ExerciseID} = '${id}';
     `,
   });
 
@@ -72,7 +78,10 @@ export const getExerciseById = async (id: string) => {
     row.reduce(
       (acc: { [key: string]: unknown }, curr: unknown, idx: number) => {
         // TODO: Figure out how to parse JSON arbitrarily
-        if (columnNames[idx] === "MuscleGroups") {
+        if (
+          columnNames[idx] ===
+          ExerciseWithMuscleGroupsView.cols.MuscleGroups.name
+        ) {
           curr = JSON.parse(curr as string);
         }
         acc[columnNames[idx]!] = curr;
@@ -89,24 +98,26 @@ export const getExerciseById = async (id: string) => {
 type IMuscleGroupWithExercisesView = {
   id: string;
   name: string;
-  exercises: { ExerciseID: string; ExerciseName: string }[];
+  Exercises: { ExerciseID: string; ExerciseName: string }[];
 };
 
 export const getMuscleGroups = async () => {
   const result = await db.exec({
     sql: `
     SELECT
-      MuscleGroupID as id,
-      MuscleGroupName as name,
-      json_extract(Exercises, '$') AS exercises
+      ${MuscleGroupWithExercisesView.cols.MuscleGroupID} as id,
+      ${MuscleGroupWithExercisesView.cols.MuscleGroupName} as name,
+      json_extract(${MuscleGroupWithExercisesView.cols.Exercises.name}, '$') AS ${MuscleGroupWithExercisesView.cols.Exercises.name}
     FROM
-        MuscleGroupWithExercises;
+      ${MuscleGroupWithExercisesView.name};
     `,
   });
   const muscleGroups: IMuscleGroupWithExercisesView[] = result.map(
     ({ columnNames, row }) =>
       row.reduce((acc, curr, idx) => {
-        if (columnNames[idx] === "exercises") {
+        if (
+          columnNames[idx] === MuscleGroupWithExercisesView.cols.Exercises.name
+        ) {
           curr = JSON.parse(curr);
         }
         acc[columnNames[idx]!] = curr;
@@ -120,13 +131,13 @@ export const getMuscleGroupById = async (id: string) => {
   const result = await db.exec({
     sql: `
     SELECT
-        MuscleGroupID as id,
-        MuscleGroupName as name,
-        json_extract(Exercises, '$') AS exercises
+      ${MuscleGroupWithExercisesView.cols.MuscleGroupID} as id,
+      ${MuscleGroupWithExercisesView.cols.MuscleGroupName} as name,
+      json_extract(${MuscleGroupWithExercisesView.cols.Exercises.name}, '$') AS ${MuscleGroupWithExercisesView.cols.Exercises.name}
     FROM
-        MuscleGroupWithExercises
+      ${MuscleGroupWithExercisesView.name}
     WHERE
-        MuscleGroupID = '${id}';
+      ${MuscleGroupWithExercisesView.cols.MuscleGroupID} = '${id}';
     `,
   });
 
@@ -134,7 +145,10 @@ export const getMuscleGroupById = async (id: string) => {
     ({ columnNames, row }) =>
       row.reduce(
         (acc: { [key: string]: unknown }, curr: unknown, idx: number) => {
-          if (columnNames[idx] === "exercises") {
+          if (
+            columnNames[idx] ===
+            MuscleGroupWithExercisesView.cols.Exercises.name
+          ) {
             curr = JSON.parse(curr as string);
           }
           acc[columnNames[idx]!] = curr;

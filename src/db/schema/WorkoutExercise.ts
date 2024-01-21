@@ -1,12 +1,16 @@
-import { tableNames } from "../constants";
+import {
+  WorkoutExerciseTable,
+  WorkoutTable,
+  ExerciseTable,
+} from "../constants";
 
-export const create = `CREATE TABLE IF NOT EXISTS ${tableNames.WorkoutExercise}(
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    WorkoutID INTEGER NOT NULL,
-    ExerciseID TEXT NOT NULL,
-    SortOrder INTEGER NOT NULL,
-    FOREIGN KEY (WorkoutID) REFERENCES ${tableNames.Workout}(id),
-    FOREIGN KEY (ExerciseID) REFERENCES ${tableNames.Exercise}(id)
+export const create = `CREATE TABLE IF NOT EXISTS ${WorkoutExerciseTable.name}(
+    ${WorkoutExerciseTable.cols.id} INTEGER PRIMARY KEY AUTOINCREMENT,
+    ${WorkoutExerciseTable.cols.WorkoutID} INTEGER NOT NULL,
+    ${WorkoutExerciseTable.cols.ExerciseID} TEXT NOT NULL,
+    ${WorkoutExerciseTable.cols.SortOrder} INTEGER NOT NULL,
+    FOREIGN KEY (${WorkoutExerciseTable.cols.WorkoutID}) REFERENCES ${WorkoutTable.name}(${WorkoutTable.cols.id}),
+    FOREIGN KEY (${WorkoutExerciseTable.cols.ExerciseID}) REFERENCES ${ExerciseTable.name}(${ExerciseTable.cols.id})
 );`;
 
 // TODO: Validate that exercise exists
@@ -15,5 +19,15 @@ export const insertReturningInstanceId = (
   exerciseId: string,
   sortOrder: number
 ) => `
-    INSERT INTO ${tableNames.WorkoutExercise}(WorkoutID, ExerciseID, SortOrder) VALUES(${workoutId}, '${exerciseId}', ${sortOrder}) RETURNING id;
+    INSERT INTO ${WorkoutExerciseTable.name}(
+      ${WorkoutExerciseTable.cols.WorkoutID}, 
+      ${WorkoutExerciseTable.cols.ExerciseID}, 
+      ${WorkoutExerciseTable.cols.SortOrder}
+    ) 
+    VALUES(
+      ${workoutId}, 
+      '${exerciseId}', 
+      ${sortOrder}
+    ) 
+    RETURNING ${WorkoutExerciseTable.cols.id};
 `;
