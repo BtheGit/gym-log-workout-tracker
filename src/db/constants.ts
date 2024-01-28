@@ -130,3 +130,62 @@ export const MuscleGroupWithExercisesView = {
     },
   },
 };
+
+export const WorkoutExercisesWithSetsView = {
+  name: `v${version}__vWorkoutExercisesWithSets`,
+  cols: {
+    workout_exercise_id: "workout_exercise_id",
+    sort_order: "sort_order",
+    workout_id: "workout_id",
+    exercise_id: "exercise_id",
+    exercise_name: "exercise_name",
+    sets: {
+      name: "sets",
+      cols: {
+        set_id: "set_id",
+        reps: "reps",
+        weight: "weight",
+        time: "time",
+        distance: "distance",
+        sort_order: "sort_order",
+      },
+    },
+  },
+};
+
+export const WorkoutWithExercisesView = {
+  name: `v${version}__vWorkoutWithWorkoutExercises`,
+  cols: {
+    workout_id: "workout_id",
+    workout_name: "workout_name",
+    workout_description: "workout_description",
+    exercises: {
+      name: "exercises",
+      cols: {
+        workout_exercise_id: "workout_exercise_id",
+        exercise_id: "exercise_id",
+        exercise_name: "exercise_name",
+        sort_order: "sort_order",
+        muscle_groups: {
+          name: "muscle_groups",
+          cols: {
+            id: "id",
+            name: "name",
+          },
+        },
+        sets: {
+          name: "sets",
+          cols: {
+            set_id: "set_id",
+            reps: "reps",
+            weight: "weight",
+            time: "time",
+            distance: "distance",
+            sort_order: "sort_order",
+          },
+        },
+      },
+    },
+  },
+};
+
