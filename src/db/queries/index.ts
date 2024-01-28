@@ -2,8 +2,78 @@ import { db } from "../db";
 import {
   ExerciseWithMuscleGroupsView,
   MuscleGroupWithExercisesView,
+  ProgramWithWorkoutsView,
   WorkoutWithExercisesView,
 } from "../constants";
+
+type IProgramView = {
+  program_id: string;
+  program_name: string;
+  program_description: string;
+  program_author: string;
+  workouts: ({ week: string; day: string } & IWorkoutView)[];
+};
+
+export const getPrograms = async () => {
+  const result = await db.exec({
+    sql: `
+      SELECT
+        ${ProgramWithWorkoutsView.cols.program_id},
+        ${ProgramWithWorkoutsView.cols.program_name},
+        ${ProgramWithWorkoutsView.cols.program_description},
+        ${ProgramWithWorkoutsView.cols.program_author},
+        ${ProgramWithWorkoutsView.cols.workouts.name}
+      FROM
+        ${ProgramWithWorkoutsView.name}
+    `,
+  });
+
+  const programs: IProgramView[] = result.map(({ columnNames, row }) =>
+    row.reduce((acc, curr, idx) => {
+      if (columnNames[idx] === ProgramWithWorkoutsView.cols.workouts.name) {
+        curr = JSON.parse(curr);
+      }
+      acc[columnNames[idx]!] = curr;
+      return acc;
+    }, {})
+  );
+
+  return programs;
+};
+
+export const getProgramById = async (id: string) => {
+  const queryResult = await db.exec({
+    sql: `
+      SELECT
+        ${ProgramWithWorkoutsView.cols.program_id},
+        ${ProgramWithWorkoutsView.cols.program_name},
+        ${ProgramWithWorkoutsView.cols.program_description},
+        ${ProgramWithWorkoutsView.cols.program_author},
+        ${ProgramWithWorkoutsView.cols.workouts.name}
+      FROM
+        ${ProgramWithWorkoutsView.name}
+      WHERE
+        ${ProgramWithWorkoutsView.cols.program_id} = ${id}
+    `,
+  });
+
+  const raw = queryResult[0];
+  if (!raw) {
+    return;
+  }
+
+  const { columnNames, row } = raw;
+
+  const program: IProgramView = row.reduce((acc, curr, idx) => {
+    if (columnNames[idx] === ProgramWithWorkoutsView.cols.workouts.name) {
+      curr = JSON.parse(curr);
+    }
+    acc[columnNames[idx]!] = curr;
+    return acc;
+  }, {});
+
+  return program;
+};
 
 type IWorkoutView = {
   workout_id: string;
@@ -14,6 +84,10 @@ type IWorkoutView = {
     exercise_id: string;
     exercise_name: string;
     sort_order: number;
+    muscle_groups: {
+      id: string;
+      name: string;
+    }[];
     sets: {
       set_id: string;
       reps: number | null;
@@ -60,6 +134,8 @@ export const getWorkoutByID = async (id: string) => {
       ${WorkoutWithExercisesView.cols.exercises.name}
     FROM
       ${WorkoutWithExercisesView.name}
+    WHERE
+      ${WorkoutWithExercisesView.cols.workout_id} = ${id}
     `,
   });
 

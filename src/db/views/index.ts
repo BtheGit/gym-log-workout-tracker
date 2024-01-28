@@ -123,6 +123,7 @@ SELECT
     p.${ProgramTable.cols.id} AS ${ProgramWithWorkoutsView.cols.program_id},
     p.${ProgramTable.cols.name} AS ${ProgramWithWorkoutsView.cols.program_name},
     p.${ProgramTable.cols.description} AS ${ProgramWithWorkoutsView.cols.program_description},
+    p.${ProgramTable.cols.author} AS ${ProgramWithWorkoutsView.cols.program_author},
     JSON_GROUP_ARRAY(JSON_OBJECT(
       '${ProgramWithWorkoutsView.cols.workouts.cols.workout_id}', vwe.${WorkoutWithExercisesView.cols.workout_id},
       '${ProgramWithWorkoutsView.cols.workouts.cols.workout_name}', vwe.${WorkoutWithExercisesView.cols.workout_name},
