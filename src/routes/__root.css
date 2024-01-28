@@ -1,0 +1,10 @@
+.site-nav {
+  display: flex;
+  width: 100%;
+  justify-content: space-around;
+  font-weight: 700;
+}
+
+.site-nav > .nav-link.active {
+  color: rgb(217, 0, 241);
+}
