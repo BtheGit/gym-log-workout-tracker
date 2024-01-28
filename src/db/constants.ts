@@ -66,7 +66,7 @@ export const WorkoutTable = {
   name: `v${version}__Workout`,
   cols: {
     id: "id",
-    Name: "Name",
+    name: "name",
     description: "description",
   },
 };
