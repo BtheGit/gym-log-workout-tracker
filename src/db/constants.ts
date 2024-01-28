@@ -166,13 +166,7 @@ export const WorkoutWithExercisesView = {
         exercise_id: "exercise_id",
         exercise_name: "exercise_name",
         sort_order: "sort_order",
-        // muscle_groups: {
-        //   name: "muscle_groups",
-        //   cols: {
-        //     id: "id",
-        //     name: "name",
-        //   },
-        // },
+        muscle_groups: "muscle_groups",
         sets: "sets",
       },
     },

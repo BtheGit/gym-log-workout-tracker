@@ -103,12 +103,15 @@ SELECT
       '${WorkoutWithExercisesView.cols.exercises.cols.exercise_id}', vwes.${WorkoutExercisesWithSetsView.cols.exercise_id},
       '${WorkoutWithExercisesView.cols.exercises.cols.exercise_name}', vwes.${WorkoutExercisesWithSetsView.cols.exercise_name},
       '${WorkoutWithExercisesView.cols.exercises.cols.sort_order}', vwes.${WorkoutExercisesWithSetsView.cols.sort_order},
-      '${WorkoutWithExercisesView.cols.exercises.cols.sets}', json(${WorkoutExercisesWithSetsView.cols.sets.name})
+      '${WorkoutWithExercisesView.cols.exercises.cols.sets}', json(vwes.${WorkoutExercisesWithSetsView.cols.sets.name}),
+      '${WorkoutWithExercisesView.cols.exercises.cols.muscle_groups}', json(emg.${ExerciseWithMuscleGroupsView.cols.muscle_groups.name})
     )) AS ${WorkoutWithExercisesView.cols.exercises.name}
 FROM
     ${WorkoutTable.name} w
 JOIN 
     ${WorkoutExercisesWithSetsView.name} vwes ON w.${WorkoutTable.cols.id} = vwes.${WorkoutExercisesWithSetsView.cols.workout_id}
+JOIN
+    ${ExerciseWithMuscleGroupsView.name} emg ON vwes.${WorkoutWithExercisesView.cols.exercises.cols.exercise_id} = emg.${ExerciseWithMuscleGroupsView.cols.exercise_id}
 GROUP BY
     w.${WorkoutTable.cols.id}
 `;
