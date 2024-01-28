@@ -2,7 +2,55 @@ import { db } from "../db";
 import {
   ExerciseWithMuscleGroupsView,
   MuscleGroupWithExercisesView,
+  WorkoutWithExercisesView,
 } from "../constants";
+
+type IWorkoutView = {
+  workout_id: string;
+  workout_name: string;
+  workout_description: string;
+  exercises: {
+    workout_exercise_id: number;
+    exercise_id: string;
+    exercise_name: string;
+    sort_order: number;
+    sets: {
+      set_id: string;
+      reps: number | null;
+      weight: number | null;
+      time: number | null;
+      distance: number | null;
+      sort_order: number;
+    }[];
+  }[];
+};
+
+export const getWorkouts = async () => {
+  const result = await db.exec({
+    sql: `
+    SELECT
+      ${WorkoutWithExercisesView.cols.workout_id},
+      ${WorkoutWithExercisesView.cols.workout_name},
+      ${WorkoutWithExercisesView.cols.workout_description},
+      ${WorkoutWithExercisesView.cols.exercises.name}
+    FROM
+      ${WorkoutWithExercisesView.name}
+    `,
+  });
+
+  const workouts: IWorkoutView[] = result.map(({ columnNames, row }) =>
+    row.reduce((acc, curr, idx) => {
+      if (columnNames[idx] === WorkoutWithExercisesView.cols.exercises.name) {
+        curr = JSON.parse(curr);
+      }
+      acc[columnNames[idx]!] = curr;
+      return acc;
+    }, {})
+  );
+  return workouts;
+};
+
+export const getWorkoutByID = async (id: string) => {};
 
 type IExerciseView = {
   exercise_id: string;
