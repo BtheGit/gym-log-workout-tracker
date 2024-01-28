@@ -166,26 +166,36 @@ export const WorkoutWithExercisesView = {
         exercise_id: "exercise_id",
         exercise_name: "exercise_name",
         sort_order: "sort_order",
-        muscle_groups: {
-          name: "muscle_groups",
-          cols: {
-            id: "id",
-            name: "name",
-          },
-        },
-        sets: {
-          name: "sets",
-          cols: {
-            set_id: "set_id",
-            reps: "reps",
-            weight: "weight",
-            time: "time",
-            distance: "distance",
-            sort_order: "sort_order",
-          },
-        },
+        // muscle_groups: {
+        //   name: "muscle_groups",
+        //   cols: {
+        //     id: "id",
+        //     name: "name",
+        //   },
+        // },
+        sets: "sets",
       },
     },
   },
 };
 
+export const ProgramWithWorkoutsView = {
+  name: `v${version}__vProgramWithWorkouts`,
+  cols: {
+    program_id: "program_id",
+    program_name: "program_name",
+    program_description: "program_description",
+    program_author: "program_author",
+    workouts: {
+      name: "workouts",
+      cols: {
+        workout_id: "workout_id",
+        workout_name: "workout_name",
+        workout_description: "workout_description",
+        week: "week",
+        day: "day",
+        exercises: "exercises",
+      },
+    },
+  },
+};

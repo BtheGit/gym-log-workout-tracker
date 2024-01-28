@@ -9,6 +9,9 @@ import {
   ExerciseWithMuscleGroupsView,
   MuscleGroupWithExercisesView,
   WorkoutWithExercisesView,
+  ProgramWithWorkoutsView,
+  ProgramTable,
+  ProgramWorkoutTable,
 } from "../constants";
 import type { DatabaseService } from "../db";
 
@@ -25,7 +28,10 @@ SELECT
     e.${ExerciseTable.cols.weight},
     e.${ExerciseTable.cols.time},
     e.${ExerciseTable.cols.distance},
-    JSON_GROUP_ARRAY(JSON_OBJECT('${ExerciseWithMuscleGroupsView.cols.muscle_groups.cols.id}', mg.${MuscleGroupTable.cols.id}, '${ExerciseWithMuscleGroupsView.cols.muscle_groups.cols.name}', mg.${MuscleGroupTable.cols.name})) AS ${ExerciseWithMuscleGroupsView.cols.muscle_groups.name}
+    JSON_GROUP_ARRAY(JSON_OBJECT(
+      '${ExerciseWithMuscleGroupsView.cols.muscle_groups.cols.id}', mg.${MuscleGroupTable.cols.id}, 
+      '${ExerciseWithMuscleGroupsView.cols.muscle_groups.cols.name}', mg.${MuscleGroupTable.cols.name}
+    )) AS ${ExerciseWithMuscleGroupsView.cols.muscle_groups.name}
 FROM
     ${ExerciseTable.name} e
 JOIN
@@ -43,7 +49,10 @@ CREATE VIEW ${MuscleGroupWithExercisesView.name} AS
 SELECT
     mg.${MuscleGroupTable.cols.id} AS ${MuscleGroupWithExercisesView.cols.muscle_group_id},
     mg.${MuscleGroupTable.cols.name} AS ${MuscleGroupWithExercisesView.cols.muscle_group_name},
-    JSON_GROUP_ARRAY(JSON_OBJECT('${MuscleGroupWithExercisesView.cols.exercises.cols.exercise_id}', e.${ExerciseTable.cols.id}, '${MuscleGroupWithExercisesView.cols.exercises.cols.exercise_name}', e.${ExerciseTable.cols.name})) AS ${MuscleGroupWithExercisesView.cols.exercises.name}
+    JSON_GROUP_ARRAY(JSON_OBJECT(
+      '${MuscleGroupWithExercisesView.cols.exercises.cols.exercise_id}', e.${ExerciseTable.cols.id}, 
+      '${MuscleGroupWithExercisesView.cols.exercises.cols.exercise_name}', e.${ExerciseTable.cols.name}
+    )) AS ${MuscleGroupWithExercisesView.cols.exercises.name}
 FROM
     ${MuscleGroupTable.name} mg
 JOIN
@@ -94,7 +103,7 @@ SELECT
       '${WorkoutWithExercisesView.cols.exercises.cols.exercise_id}', vwes.${WorkoutExercisesWithSetsView.cols.exercise_id},
       '${WorkoutWithExercisesView.cols.exercises.cols.exercise_name}', vwes.${WorkoutExercisesWithSetsView.cols.exercise_name},
       '${WorkoutWithExercisesView.cols.exercises.cols.sort_order}', vwes.${WorkoutExercisesWithSetsView.cols.sort_order},
-      '${WorkoutWithExercisesView.cols.exercises.cols.sets.name}', json(${WorkoutExercisesWithSetsView.cols.sets.name})
+      '${WorkoutWithExercisesView.cols.exercises.cols.sets}', json(${WorkoutExercisesWithSetsView.cols.sets.name})
     )) AS ${WorkoutWithExercisesView.cols.exercises.name}
 FROM
     ${WorkoutTable.name} w
@@ -104,9 +113,35 @@ GROUP BY
     w.${WorkoutTable.cols.id}
 `;
 
+export const createProgramWithWorkoutsView = `
+DROP VIEW IF EXISTS ${ProgramWithWorkoutsView.name};
+CREATE VIEW ${ProgramWithWorkoutsView.name} AS
+SELECT
+    p.${ProgramTable.cols.id} AS ${ProgramWithWorkoutsView.cols.program_id},
+    p.${ProgramTable.cols.name} AS ${ProgramWithWorkoutsView.cols.program_name},
+    p.${ProgramTable.cols.description} AS ${ProgramWithWorkoutsView.cols.program_description},
+    JSON_GROUP_ARRAY(JSON_OBJECT(
+      '${ProgramWithWorkoutsView.cols.workouts.cols.workout_id}', vwe.${WorkoutWithExercisesView.cols.workout_id},
+      '${ProgramWithWorkoutsView.cols.workouts.cols.workout_name}', vwe.${WorkoutWithExercisesView.cols.workout_name},
+      '${ProgramWithWorkoutsView.cols.workouts.cols.workout_description}', vwe.${WorkoutWithExercisesView.cols.workout_description},
+      '${ProgramWithWorkoutsView.cols.workouts.cols.week}', pw.${ProgramWorkoutTable.cols.week},
+      '${ProgramWithWorkoutsView.cols.workouts.cols.day}', pw.${ProgramWorkoutTable.cols.day},
+      '${ProgramWithWorkoutsView.cols.workouts.cols.exercises}', json(vwe.${WorkoutWithExercisesView.cols.exercises.name})
+    )) AS ${ProgramWithWorkoutsView.cols.workouts.name}
+FROM
+    ${ProgramTable.name} p
+JOIN
+    ${ProgramWorkoutTable.name} pw ON p.${ProgramTable.cols.id} = pw.${ProgramWorkoutTable.cols.program_id}
+JOIN
+    ${WorkoutWithExercisesView.name} vwe ON pw.${ProgramWorkoutTable.cols.workout_id} = vwe.${WorkoutWithExercisesView.cols.workout_id}
+GROUP BY
+    p.${ProgramTable.cols.id}
+`;
+
 export const createViews = async (db: DatabaseService) => {
   await db.exec({ sql: createExerciseWithMuscleGroupsView });
   await db.exec({ sql: createMuscleGroupWithExercisesView });
   await db.exec({ sql: createWorkoutExerciseWithSetsView });
   await db.exec({ sql: createWorkoutWithExercisesView });
+  await db.exec({ sql: createProgramWithWorkoutsView });
 };
