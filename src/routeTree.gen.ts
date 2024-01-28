@@ -4,10 +4,12 @@
 
 import { Route as rootRoute } from './routes/__root'
 import { Route as WorkoutsImport } from './routes/workouts'
+import { Route as ProgramsImport } from './routes/programs'
 import { Route as MuscleGroupsImport } from './routes/muscle-groups'
 import { Route as ExercisesImport } from './routes/exercises'
 import { Route as IndexImport } from './routes/index'
 import { Route as WorkoutIdImport } from './routes/workout/$id'
+import { Route as ProgramIdImport } from './routes/program/$id'
 import { Route as MuscleGroupIdImport } from './routes/muscle-group/$id'
 import { Route as ExerciseIdImport } from './routes/exercise/$id'
 
@@ -15,6 +17,11 @@ import { Route as ExerciseIdImport } from './routes/exercise/$id'
 
 const WorkoutsRoute = WorkoutsImport.update({
   path: '/workouts',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const ProgramsRoute = ProgramsImport.update({
+  path: '/programs',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -35,6 +42,11 @@ const IndexRoute = IndexImport.update({
 
 const WorkoutIdRoute = WorkoutIdImport.update({
   path: '/workout/$id',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const ProgramIdRoute = ProgramIdImport.update({
+  path: '/program/$id',
   getParentRoute: () => rootRoute,
 } as any)
 
