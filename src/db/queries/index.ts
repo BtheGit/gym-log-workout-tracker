@@ -50,7 +50,36 @@ export const getWorkouts = async () => {
   return workouts;
 };
 
-export const getWorkoutByID = async (id: string) => {};
+export const getWorkoutByID = async (id: string) => {
+  const queryResult = await db.exec({
+    sql: `
+    SELECT
+      ${WorkoutWithExercisesView.cols.workout_id},
+      ${WorkoutWithExercisesView.cols.workout_name},
+      ${WorkoutWithExercisesView.cols.workout_description},
+      ${WorkoutWithExercisesView.cols.exercises.name}
+    FROM
+      ${WorkoutWithExercisesView.name}
+    `,
+  });
+
+  const rawWorkout = queryResult[0];
+  if (!rawWorkout) {
+    return;
+  }
+
+  const { columnNames, row } = rawWorkout;
+
+  const workout: IWorkoutView = row.reduce((acc, curr, idx) => {
+    if (columnNames[idx] === WorkoutWithExercisesView.cols.exercises.name) {
+      curr = JSON.parse(curr);
+    }
+    acc[columnNames[idx]!] = curr;
+    return acc;
+  }, {});
+
+  return workout;
+};
 
 type IExerciseView = {
   exercise_id: string;
