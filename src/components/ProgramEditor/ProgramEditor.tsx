@@ -1,8 +1,6 @@
-import { useForm, useFieldArray, Controller } from "react-hook-form";
-import Select from "react-select";
-import { useExercises } from "../../db/hooks";
-import { useState } from "react";
+import { useForm, useFieldArray } from "react-hook-form";
 import "./ProgramEditor.css";
+import { type WorkoutFormData, WorkoutEditor } from "./WorkoutEditor";
 // import { WorkoutEditor } from "./WorkoutEditor";
 
 // Program Editor
@@ -24,37 +22,12 @@ type ProgramFormData = {
   workouts: WorkoutFormData[];
 };
 
-type WorkoutFormData = {
-  week: number;
-  day: number;
-  workout_name: string;
-  workout_description: string;
-  exercises: WorkoutExerciseFormData[];
-};
-
-type WorkoutExerciseFormData = {
-  exercise_id: string;
-  sets: WorkoutExerciseSetFormData[];
-};
-
-type WorkoutExerciseSetFormData = {
-  weight?: number;
-  reps?: number;
-  time?: number;
-  distance?: number;
-};
-
 const newWorkoutValue = {
   week: 1,
   day: 1,
   workout_name: "",
   workout_description: "",
   exercises: [],
-};
-
-const newExerciseValue = {
-  exercise_id: "",
-  sets: [] as any,
 };
 
 export function ProgramEditor() {
@@ -107,135 +80,4 @@ export function ProgramEditor() {
       </form>
     </>
   );
-}
-
-export function WorkoutEditor({ update, index, value }) {
-  const { register, handleSubmit, control } = useForm<WorkoutFormData>({
-    defaultValues: value,
-  });
-  const {
-    fields,
-    append,
-    update: updateExercise,
-  } = useFieldArray({
-    control,
-    name: "exercises",
-  });
-  return (
-    <>
-      <div className="form-field">
-        <label>Name</label>
-        <input
-          {...register("workout_name", { required: true, maxLength: 250 })}
-        />
-      </div>
-      <div className="form-field">
-        <label>Description</label>
-        <textarea {...register("workout_description")} />
-      </div>
-      <div className="form-field">
-        <p>Exercises</p>
-        <ul className="editor-group">
-          {fields.map((field, index) => (
-            <li key={field.id} className="editor">
-              <WorkoutExerciseEditor
-                update={updateExercise}
-                index={index}
-                value={field}
-              />
-            </li>
-          ))}
-          <button
-            type="button"
-            onClick={() => {
-              append({ ...newExerciseValue });
-            }}
-          >
-            Add Exercise
-          </button>
-        </ul>
-      </div>
-      <button
-        type="button"
-        className="button--save"
-        onClick={handleSubmit((data) => update(index, data))}
-      >
-        Save Workout
-      </button>
-    </>
-  );
-}
-
-// Need to have access to all available exercises for populating select
-export function WorkoutExerciseEditor({ update, index, value }) {
-  const { register, handleSubmit, control, watch } =
-    useForm<WorkoutExerciseFormData>({
-      defaultValues: value,
-    });
-  const exerciseIdValue = watch("exercise_id");
-  const {
-    fields,
-    append,
-    update: updateSet,
-  } = useFieldArray({
-    control,
-    name: "sets",
-  });
-  const exercises = useExercises();
-  const options = exercises.map(({ exercise_id, exercise_name }) => ({
-    value: exercise_id,
-    label: exercise_name,
-  }));
-
-  // Not getting a value.exercise_id until actually updating, that's not ideal. We need to base our set editor off of the input instead of the value TODO:
-  return (
-    <>
-      <Controller
-        name="exercise_id"
-        control={control}
-        render={({ field: { onChange, ref } }) => (
-          <Select
-            inputRef={ref}
-            onChange={(val) => onChange(val?.value)}
-            options={options}
-            value={options.find((c) => c.value === value.exercise_id)}
-          />
-        )}
-      />
-      {exerciseIdValue && (
-        <div className="form-field">
-          {/* TODO: Unlike with other fields. Sets is dependent on exercise (for validation) so if exercise changes, we need to clear sets. (I think react-hook-form support this) */}
-          <p>Sets</p>
-          <ul className="editor-group">
-            {fields.map((field, index) => (
-              <li key={field.id}>
-                <WorkoutExerciseSetEditor />
-              </li>
-            ))}
-            <button
-              type="button"
-              onClick={() => {
-                append({ ...newSetValue });
-              }}
-            >
-              Add Set
-            </button>
-          </ul>
-        </div>
-      )}
-      {exerciseIdValue && (
-        <button
-          type="button"
-          className="button--save"
-          onClick={handleSubmit((data) => update(index, data))}
-        >
-          Save Exercise
-        </button>
-      )}
-    </>
-  );
-}
-
-export function WorkoutExerciseSetEditor() {
-  return <></>;
 }
