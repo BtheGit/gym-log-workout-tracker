@@ -18,6 +18,9 @@ export function component() {
     <>
       <h1>Programs</h1>
       <ul>
+        <li key="add-new">
+          <Link to={"/program/new"}>+ Add New Program</Link>
+        </li>
         {programs.map((program) => (
           <li key={program.program_id}>
             <Link to={`/program/$id`} params={{ id: program.program_id }}>

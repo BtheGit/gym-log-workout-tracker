@@ -6,7 +6,7 @@ import {
   WorkoutWithExercisesView,
 } from "../constants";
 
-type IProgramView = {
+export type IProgramView = {
   program_id: string;
   program_name: string;
   program_description: string;
@@ -75,7 +75,7 @@ export const getProgramById = async (id: string) => {
   return program;
 };
 
-type IWorkoutView = {
+export type IWorkoutView = {
   workout_id: string;
   workout_name: string;
   workout_description: string;
@@ -157,7 +157,7 @@ export const getWorkoutByID = async (id: string) => {
   return workout;
 };
 
-type IExerciseView = {
+export type IExerciseView = {
   exercise_id: string;
   exercise_name: string;
   exercise_description: string;
@@ -249,7 +249,7 @@ export const getExerciseById = async (id: string) => {
   }
 };
 
-type IMuscleGroupWithExercisesView = {
+export type IMuscleGroupWithExercisesView = {
   id: string;
   name: string;
   exercises: { exercise_id: string; exercise_name: string }[];

@@ -35,6 +35,7 @@ ol[role="list"] {
 ol,
 ul {
   list-style: none;
+  padding-inline-start: 0;
 }
 
 /* Set core body defaults */
