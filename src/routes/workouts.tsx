@@ -18,6 +18,9 @@ export function component() {
     <>
       <h1>Workouts</h1>
       <ul>
+        <li key="add-new">
+          <Link to={"/workout/new"}>+ Add New Workout</Link>
+        </li>
         {workouts.map((workout) => (
           <li key={workout.workout_id}>
             <Link to={`/workout/$id`} params={{ id: workout.workout_id }}>

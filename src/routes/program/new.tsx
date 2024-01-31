@@ -1,5 +1,5 @@
 import { FileRoute } from "@tanstack/react-router";
-import { ProgramEditor } from "../../components/ProgramEditor/ProgramEditor";
+import { ProgramEditor } from "../../components/TemplateEditors/ProgramEditor";
 
 export const Route = new FileRoute("/program/new").createRoute({
   component,

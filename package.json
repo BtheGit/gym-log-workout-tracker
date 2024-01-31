@@ -15,9 +15,9 @@
     "@tanstack/react-router": "^1.8.3",
     "@tanstack/router-devtools": "^1.8.3",
     "react": "^18.2.0",
-    "react-aria-components": "^1.0.1",
     "react-dom": "^18.2.0",
     "react-hook-form": "^7.49.3",
+    "react-aria-components": "^1.0.1",
     "react-select": "^5.8.0"
   },
   "devDependencies": {
