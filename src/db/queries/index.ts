@@ -32,6 +32,8 @@ export const getPrograms = async () => {
     row.reduce((acc, curr, idx) => {
       if (columnNames[idx] === ProgramWithWorkoutsView.cols.workouts.name) {
         curr = JSON.parse(curr);
+        // In order to get programs with and without workouts, we did a left join in the view, which means we will also get an empty workout object with all null values. For simplicities sake, we'll just filter those out.
+        curr = curr.filter((workout) => workout.workout_id !== null);
       }
       acc[columnNames[idx]!] = curr;
       return acc;
@@ -67,6 +69,8 @@ export const getProgramById = async (id: string) => {
   const program: IProgramView = row.reduce((acc, curr, idx) => {
     if (columnNames[idx] === ProgramWithWorkoutsView.cols.workouts.name) {
       curr = JSON.parse(curr);
+      // In order to get programs with and without workouts, we did a left join in the view, which means we will also get an empty workout object with all null values. For simplicities sake, we'll just filter those out.
+      curr = curr.filter((workout) => workout.workout_id !== null);
     }
     acc[columnNames[idx]!] = curr;
     return acc;
