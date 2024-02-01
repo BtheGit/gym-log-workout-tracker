@@ -3,6 +3,9 @@ import { createViews } from "../db/views/index";
 import { db } from "../db/db";
 import { FileRoute } from "@tanstack/react-router";
 
+// await seedDB();
+// await createViews(db);
+
 export const Route = new FileRoute("/").createRoute({
   component,
 });
@@ -10,7 +13,7 @@ export const Route = new FileRoute("/").createRoute({
 export function component() {
   const onSeedHandler = async () => {
     const start = performance.now();
-    await seedDB(db);
+    await seedDB();
     await createViews(db);
     const end = performance.now();
     console.log(`Database reseeded in ${end - start}ms`);

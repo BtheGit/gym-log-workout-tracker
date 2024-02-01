@@ -11,14 +11,3 @@ export const create = `CREATE TABLE IF NOT EXISTS ${WorkoutTable.name}(
     ${WorkoutTable.cols.name} TEXT NOT NULL,
     ${WorkoutTable.cols.description} TEXT NOT NULL
 );`;
-
-export const insertReturningId = (workout: IWorkout) => `
-  INSERT INTO ${WorkoutTable.name}(
-    ${WorkoutTable.cols.name},
-    ${WorkoutTable.cols.description}
-  ) VALUES (
-    '${workout.name}',
-    '${workout.description}'
-  )
-  RETURNING ${WorkoutTable.cols.id};
-`;
