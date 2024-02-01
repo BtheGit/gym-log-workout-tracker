@@ -134,9 +134,9 @@ SELECT
     )) AS ${ProgramWithWorkoutsView.cols.workouts.name}
 FROM
     ${ProgramTable.name} p
-JOIN
+LEFT JOIN
     ${ProgramWorkoutTable.name} pw ON p.${ProgramTable.cols.id} = pw.${ProgramWorkoutTable.cols.program_id}
-JOIN
+LEFT JOIN
     ${WorkoutWithExercisesView.name} vwe ON pw.${ProgramWorkoutTable.cols.workout_id} = vwe.${WorkoutWithExercisesView.cols.workout_id}
 GROUP BY
     p.${ProgramTable.cols.id}
