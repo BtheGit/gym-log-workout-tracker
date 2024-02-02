@@ -5,10 +5,11 @@ import { addWorkout } from "./workoutController";
 export async function addProgram(program: IProgramData) {
   const programId = await insertProgram(program);
 
-  if (!program.workouts) {
-    return;
+  if (program.workouts) {
+    for await (const workout of program.workouts) {
+      await addWorkout(workout, programId);
+    }
   }
-  for await (const workout of program.workouts) {
-    await addWorkout(workout, programId);
-  }
+
+  return programId;
 }

@@ -7,6 +7,9 @@ import { IProgramWorkoutData } from "../data/programs";
 
 // TODO: Error catch and roll back changes if at all possible?
 export async function addWorkout(workout: IWorkoutData, programId?: number) {
+  if (!workout?.exercises?.length) {
+    throw new Error("Workouts must contain at least one exercise");
+  }
   const workoutId = await insertWorkout(workout);
 
   if (programId) {
@@ -18,36 +21,35 @@ export async function addWorkout(workout: IWorkoutData, programId?: number) {
     );
   }
 
-  if (!workout?.exercises?.length) {
-    return;
-  }
-
-  for await (const [
-    exerciseIndex,
-    workoutExercise,
-  ] of workout.exercises.entries()) {
-    const workoutExerciseId = await insertWorkoutExercise(
-      workoutId,
-      workoutExercise.id,
-      exerciseIndex
-    );
-
-    // TODO: FUTURE FEATURE = Validate that the set matches the exercise (eg. reps, weight vs time, distance)
-    if (!workoutExercise?.sets?.length) {
-      return;
-    }
+  if (workout?.exercises?.length) {
     for await (const [
-      setIndex,
-      workoutExerciseSet,
-    ] of workoutExercise.sets.entries()) {
-      await insertWorkoutExerciseSet(
-        workoutExerciseId,
-        setIndex,
-        workoutExerciseSet.reps,
-        workoutExerciseSet.weight,
-        workoutExerciseSet.time,
-        workoutExerciseSet.distance
+      exerciseIndex,
+      workoutExercise,
+    ] of workout.exercises.entries()) {
+      const workoutExerciseId = await insertWorkoutExercise(
+        workoutId,
+        workoutExercise.id,
+        exerciseIndex
       );
+
+      // TODO: FUTURE FEATURE = Validate that the set matches the exercise (eg. reps, weight vs time, distance)
+      if (workoutExercise?.sets?.length) {
+        for await (const [
+          setIndex,
+          workoutExerciseSet,
+        ] of workoutExercise.sets.entries()) {
+          await insertWorkoutExerciseSet(
+            workoutExerciseId,
+            setIndex,
+            workoutExerciseSet.reps,
+            workoutExerciseSet.weight,
+            workoutExerciseSet.time,
+            workoutExerciseSet.distance
+          );
+        }
+      }
     }
   }
+
+  return workoutId;
 }
