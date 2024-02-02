@@ -1,7 +1,7 @@
-import { useForm, useFieldArray } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import "./ProgramEditor.css";
-import { type WorkoutFormData, WorkoutEditor } from "./WorkoutEditor";
-// import { WorkoutEditor } from "./WorkoutEditor";
+import { addProgram } from "../../db/controllers/programController";
+import { useNavigate } from "@tanstack/react-router";
 
 // Program Editor
 // The program editor will wrap a multi component tree that will involve nested dynamic forms.
@@ -16,66 +16,40 @@ import { type WorkoutFormData, WorkoutEditor } from "./WorkoutEditor";
 
 // TODO: Figure out how to have sort_order work correctly with a draggable library (probably just a field update under the hood with built in tooling - may have to roll though)
 type ProgramFormData = {
-  program_name: string;
-  program_description: string;
-  program_author: string;
-  workouts: WorkoutFormData[];
-};
-
-const newWorkoutValue = {
-  week: 1,
-  day: 1,
-  workout_name: "",
-  workout_description: "",
-  exercises: [],
+  name: string;
+  description: string;
+  author: string;
+  // workouts: WorkoutFormData[];
 };
 
 export function ProgramEditor() {
-  const { register, handleSubmit, control } = useForm<ProgramFormData>();
-  const { fields, append, update } = useFieldArray({
-    control,
-    name: "workouts",
+  const navigate = useNavigate({ from: "/program/new" });
+  const { register, handleSubmit } = useForm<ProgramFormData>();
+
+  const onSubmit = handleSubmit(async (data) => {
+    const programId = await addProgram(data);
+    // TODO: Investigate. Maybe can replace history with the api such that a back action would go to programs and not new program.
+    navigate({ to: "/program/$id", params: { id: programId } });
   });
-  const onSubmit = handleSubmit(console.log);
   return (
     <>
       <form onSubmit={onSubmit} className="editor">
         <div>
           <div className="form-field">
             <label>Name</label>
-            <input
-              {...register("program_name", { required: true, maxLength: 250 })}
-            />
+            <input {...register("name", { required: true, maxLength: 250 })} />
           </div>
           <div className="form-field">
             <label>Author</label>
-            <input {...register("program_author")} />
+            <input {...register("author")} />
           </div>
           <div className="form-field">
             <label>Description</label>
-            <textarea {...register("program_description")} />
+            <textarea {...register("description")} />
           </div>
         </div>
-        <div className="form-field">
-          <p>Workouts</p>
-          <ul className="editor-group">
-            {fields.map((field, index) => (
-              <li key={field.id} className="editor">
-                <WorkoutEditor update={update} index={index} value={field} />
-              </li>
-            ))}
-            <button
-              type="button"
-              onClick={() => {
-                append({ ...newWorkoutValue });
-              }}
-            >
-              Add Workout
-            </button>
-          </ul>
-        </div>
         <button type="submit" className="button--save">
-          Save Program
+          Create Program
         </button>
       </form>
     </>
