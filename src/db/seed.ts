@@ -71,11 +71,19 @@ export const seedDB = async () => {
 
   // ## Add Programs
   for await (const program of programs) {
-    await addProgram(program);
+    try {
+      await addProgram(program);
+    } catch (err) {
+      console.error(err);
+    }
   }
 
   for await (const workout of workouts) {
-    await addWorkout(workout);
+    try {
+      await addWorkout(workout);
+    } catch (err) {
+      console.error(err);
+    }
   }
 
   // ## Add Workouts
