@@ -8,7 +8,7 @@ export const Route = new FileRoute("/program/new").createRoute({
 export function component() {
   return (
     <>
-      <h1>New Program</h1>
+      <h1>Create New Program</h1>
       <ProgramEditor />
     </>
   );

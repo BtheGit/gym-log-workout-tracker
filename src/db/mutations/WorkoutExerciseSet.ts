@@ -10,7 +10,7 @@ export const insertWorkoutExerciseSet = async (
   distance: number | undefined
 ) => {
   // TODO: Validate set values for correct numerical type against exercise type
-  // TODO: return id
+  // TODO: Everything can be an int (time in MS or S, distance in meters/1000s of a mile or something (obviously in one, converted back and forth to the other. Might need to be more granular to avoid issues with conversion rounding))
   const result = await db.exec({
     sql: `INSERT INTO ${WorkoutExerciseSetTable.name}(
       ${WorkoutExerciseSetTable.cols.workout_exercise_instance_id},

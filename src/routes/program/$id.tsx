@@ -23,7 +23,7 @@ export function component() {
       <hr />
       <h2>Workouts</h2>
       <ul>
-        {program.workouts?.length &&
+        {program.workouts.length > 0 &&
           program.workouts.map((workout) => (
             <li key={workout.workout_id}>
               <p>{workout.workout_name}</p>
