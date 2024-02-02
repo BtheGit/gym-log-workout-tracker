@@ -1,4 +1,4 @@
-import { FileRoute, Link } from "@tanstack/react-router";
+import { FileRoute } from "@tanstack/react-router";
 import { getWorkoutByID } from "../../db/queries";
 
 export const Route = new FileRoute("/workout/$id").createRoute({
