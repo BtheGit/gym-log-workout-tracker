@@ -86,7 +86,7 @@ FROM
 JOIN
     ${ExerciseTable.name} e ON we.${WorkoutExerciseTable.cols.exercise_id} = e.${ExerciseTable.cols.id}
 JOIN
-    ${WorkoutExerciseSetTable.name} wes ON we.${WorkoutExerciseTable.cols.id} = wes.${WorkoutExerciseSetTable.cols.id}
+    ${WorkoutExerciseSetTable.name} wes ON we.${WorkoutExerciseTable.cols.id} = wes.${WorkoutExerciseSetTable.cols.workout_exercise_instance_id}
 GROUP BY
     we.${WorkoutExerciseTable.cols.id}
 `;
