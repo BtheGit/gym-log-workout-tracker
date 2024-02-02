@@ -12,22 +12,3 @@ export const create = `CREATE TABLE IF NOT EXISTS ${WorkoutExerciseTable.name}(
     FOREIGN KEY (${WorkoutExerciseTable.cols.workout_id}) REFERENCES ${WorkoutTable.name}(${WorkoutTable.cols.id}),
     FOREIGN KEY (${WorkoutExerciseTable.cols.exercise_id}) REFERENCES ${ExerciseTable.name}(${ExerciseTable.cols.id})
 );`;
-
-// TODO: Validate that exercise exists
-export const insertReturningInstanceId = (
-  workoutId: number,
-  exerciseId: string,
-  sortOrder: number
-) => `
-    INSERT INTO ${WorkoutExerciseTable.name}(
-      ${WorkoutExerciseTable.cols.workout_id}, 
-      ${WorkoutExerciseTable.cols.exercise_id}, 
-      ${WorkoutExerciseTable.cols.sort_order}
-    ) 
-    VALUES(
-      ${workoutId}, 
-      '${exerciseId}', 
-      ${sortOrder}
-    ) 
-    RETURNING ${WorkoutExerciseTable.cols.id};
-`;

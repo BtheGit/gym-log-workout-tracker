@@ -1,0 +1,905 @@
+button {
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.form-field {
+  display: flex;
+  flex-direction: column;
+  flex-wrap: nowrap;
+  padding: 5px;
+}
+
+.form-field > label {
+  margin-bottom: 5px;
+}
+
+.editor-group {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: center;
+  background: rgb(250, 250, 250);
+  box-shadow: inset 0 0 25px -15px black;
+  padding: 15px;
+  border-radius: 5px;
+  min-height: 150px;
+}
+
+.editor-group .editor-group {
+  background-color: rgb(231, 231, 231);
+}
+
+.editor-group .editor-group .editor-group {
+  background-color: rgb(202, 202, 202);
+}
+
+.editor-group > * {
+  box-shadow: 0 3px 15px -10px black;
+}
+
+.editor-group > li {
+  width: 100%;
+  border: 1px solid lightgrey;
+  background: white;
+  padding: 10px;
+}
+
+.editor-group > button {
+  width: 250px;
+  background: skyblue;
+  margin-top: 10px;
+  padding: 10px 0;
+  font-size: 1.1rem;
+}
+
+.editor {
+  padding: 20px 10px;
+  width: min(1200px, 100%);
+  border-radius: 5px;
+  margin-bottom: 10px;
+}
+
+.form-field > p:first-child {
+  padding-bottom: 5px;
+  margin-bottom: 10px;
+  border-bottom: 1px solid black;
+}
+
+.editor .button--save {
+  display: block;
+  width: 400px;
+  margin: 20px auto;
+  padding: 10px 0;
+  background: darkcyan;
+  color: white;
+  font-size: 1.25rem;
+}
+
+/*  From React-aria examples */
+/* color themes for dark and light modes, generated with Leonardo.
+ * Light: https://leonardocolor.io/theme.html?name=Light&config=%7B%22baseScale%22%3A%22Gray%22%2C%22colorScales%22%3A%5B%7B%22name%22%3A%22Gray%22%2C%22colorKeys%22%3A%5B%22%23000000%22%5D%2C%22colorspace%22%3A%22RGB%22%2C%22ratios%22%3A%5B%22-1.12%22%2C%221.45%22%2C%222.05%22%2C%223.02%22%2C%224.54%22%2C%227%22%2C%2210.86%22%5D%2C%22smooth%22%3Afalse%7D%2C%7B%22name%22%3A%22Purple%22%2C%22colorKeys%22%3A%5B%22%235e30eb%22%5D%2C%22colorspace%22%3A%22RGB%22%2C%22ratios%22%3A%5B%22-1.12%22%2C%221.45%22%2C%222.05%22%2C%223.02%22%2C%224.54%22%2C%227%22%2C%2210.86%22%5D%2C%22smooth%22%3Afalse%7D%2C%7B%22name%22%3A%22Red%22%2C%22colorKeys%22%3A%5B%22%23e32400%22%5D%2C%22colorspace%22%3A%22RGB%22%2C%22ratios%22%3A%5B%22-1.12%22%2C%221.45%22%2C%222.05%22%2C%223.02%22%2C%224.54%22%2C%227%22%2C%2210.86%22%5D%2C%22smooth%22%3Afalse%7D%5D%2C%22lightness%22%3A98%2C%22contrast%22%3A1%2C%22saturation%22%3A100%2C%22formula%22%3A%22wcag2%22%7D */
+:root {
+  --background-color: #f8f8f8;
+  --gray-50: #ffffff;
+  --gray-100: #d0d0d0;
+  --gray-200: #afafaf;
+  --gray-300: #8f8f8f;
+  --gray-400: #717171;
+  --gray-500: #555555;
+  --gray-600: #393939;
+  --purple-100: #d5c9fa;
+  --purple-200: #b8a3f6;
+  --purple-300: #997cf2;
+  --purple-400: #7a54ef;
+  --purple-500: #582ddc;
+  --purple-600: #3c1e95;
+  --red-100: #f7c4ba;
+  --red-200: #f29887;
+  --red-300: #eb664d;
+  --red-400: #de2300;
+  --red-500: #a81b00;
+  --red-600: #731200;
+  --highlight-hover: rgb(0 0 0 / 0.07);
+  --highlight-pressed: rgb(0 0 0 / 0.15);
+}
+
+/* Dark: https://leonardocolor.io/theme.html?name=Dark&config=%7B%22baseScale%22%3A%22Gray%22%2C%22colorScales%22%3A%5B%7B%22name%22%3A%22Gray%22%2C%22colorKeys%22%3A%5B%22%23000000%22%5D%2C%22colorspace%22%3A%22RGB%22%2C%22ratios%22%3A%5B%22-1.12%22%2C%221.45%22%2C%222.05%22%2C%223.02%22%2C%224.54%22%2C%227%22%2C%2210.86%22%5D%2C%22smooth%22%3Afalse%7D%2C%7B%22name%22%3A%22Purple%22%2C%22colorKeys%22%3A%5B%22%235e30eb%22%5D%2C%22colorspace%22%3A%22RGB%22%2C%22ratios%22%3A%5B%22-1.12%22%2C%221.45%22%2C%222.05%22%2C%223.02%22%2C%224.54%22%2C%227%22%2C%2210.86%22%5D%2C%22smooth%22%3Afalse%7D%2C%7B%22name%22%3A%22Red%22%2C%22colorKeys%22%3A%5B%22%23e32400%22%5D%2C%22colorspace%22%3A%22RGB%22%2C%22ratios%22%3A%5B%22-1.12%22%2C%221.45%22%2C%222.05%22%2C%223.02%22%2C%224.54%22%2C%227%22%2C%2210.86%22%5D%2C%22smooth%22%3Afalse%7D%5D%2C%22lightness%22%3A11%2C%22contrast%22%3A1%2C%22saturation%22%3A100%2C%22formula%22%3A%22wcag2%22%7D */
+/* @media (prefers-color-scheme: dark) {
+  :root {
+    --background-color: #1d1d1d;
+    --gray-50: #101010;
+    --gray-100: #393939;
+    --gray-200: #4f4f4f;
+    --gray-300: #686868;
+    --gray-400: #848484;
+    --gray-500: #a7a7a7;
+    --gray-600: #cfcfcf;
+    --purple-100: #3c1e95;
+    --purple-200: #522acd;
+    --purple-300: #6f46ed;
+    --purple-400: #8e6ef1;
+    --purple-500: #b099f5;
+    --purple-600: #d5c8fa;
+    --red-100: #721200;
+    --red-200: #9c1900;
+    --red-300: #cc2000;
+    --red-400: #e95034;
+    --red-500: #f08c79;
+    --red-600: #f7c3ba;
+    --highlight-hover: rgb(255 255 255 / 0.1);
+    --highlight-pressed: rgb(255 255 255 / 0.2);
+  }
+} */
+
+/* Semantic colors */
+:root {
+  --focus-ring-color: var(--purple-400);
+  --text-color: var(--gray-600);
+  --text-color-base: var(--gray-500);
+  --text-color-hover: var(--gray-600);
+  --text-color-disabled: var(--gray-200);
+  --text-color-placeholder: var(--gray-400);
+  --link-color: var(--purple-500);
+  --link-color-secondary: var(--gray-500);
+  --link-color-pressed: var(--purple-600);
+  --border-color: var(--gray-300);
+  --border-color-hover: var(--gray-400);
+  --border-color-pressed: var(--gray-400);
+  --border-color-disabled: var(--gray-100);
+  --field-background: var(--gray-50);
+  --field-text-color: var(--gray-600);
+  --overlay-background: var(--gray-50);
+  --button-background: var(--gray-50);
+  --button-background-pressed: var(--background-color);
+  /* these colors are the same between light and dark themes
+   * to ensure contrast with the foreground color */
+  --highlight-background: #6f46ed; /* purple-300 from dark theme, 3.03:1 against background-color */
+  --highlight-background-pressed: #522acd; /* purple-200 from dark theme */
+  --highlight-background-invalid: #cc2000; /* red-300 from dark theme */
+  --highlight-foreground: white; /* 5.56:1 against highlight-background */
+  --highlight-foreground-pressed: #ddd;
+  --highlight-overlay: rgb(from #6f46ed r g b / 15%);
+  --invalid-color: var(--red-400);
+  --invalid-color-pressed: var(--red-500);
+}
+
+/* Windows high contrast mode overrides */
+@media (forced-colors: active) {
+  :root {
+    --background-color: Canvas;
+    --focus-ring-color: Highlight;
+    --text-color: ButtonText;
+    --text-color-base: ButtonText;
+    --text-color-hover: ButtonText;
+    --text-color-disabled: GrayText;
+    --text-color-placeholder: ButtonText;
+    --link-color: LinkText;
+    --link-color-secondary: LinkText;
+    --link-color-pressed: LinkText;
+    --border-color: ButtonBorder;
+    --border-color-hover: ButtonBorder;
+    --border-color-pressed: ButtonBorder;
+    --border-color-disabled: GrayText;
+    --field-background: Field;
+    --field-text-color: FieldText;
+    --overlay-background: Canvas;
+    --button-background: ButtonFace;
+    --button-background-pressed: ButtonFace;
+    --highlight-background: Highlight;
+    --highlight-background-pressed: Highlight;
+    --highlight-background-invalid: LinkText;
+    --highlight-foreground: HighlightText;
+    --highlight-foreground-pressed: HighlightText;
+    --invalid-color: LinkText;
+    --invalid-color-pressed: LinkText;
+  }
+}
+
+.react-aria-ModalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: var(--visual-viewport-height);
+  background: rgba(0 0 0 / 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+
+  &[data-entering] {
+    animation: modal-fade 200ms;
+  }
+
+  &[data-exiting] {
+    animation: modal-fade 150ms reverse ease-in;
+  }
+}
+
+.react-aria-Modal {
+  box-shadow: 0 8px 20px rgba(0 0 0 / 0.1);
+  border-radius: 6px;
+  background: var(--overlay-background);
+  color: var(--text-color);
+  border: 1px solid var(--gray-400);
+  outline: none;
+  max-width: 300px;
+
+  &[data-entering] {
+    animation: modal-zoom 300ms cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  }
+
+  .react-aria-TextField {
+    margin-bottom: 8px;
+  }
+}
+
+@keyframes modal-fade {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes modal-zoom {
+  from {
+    transform: scale(0.8);
+  }
+
+  to {
+    transform: scale(1);
+  }
+}
+
+.react-aria-Select {
+  color: var(--text-color);
+
+  .react-aria-Button {
+    box-shadow: 0 1px 2px rgba(0 0 0 / 0.1);
+    border-radius: 6px;
+    font-size: 1.072rem;
+    padding: 0.286rem 0.286rem 0.286rem 0.571rem;
+    display: flex;
+    align-items: center;
+    max-width: 250px;
+
+    &[data-focus-visible] {
+      outline: 2px solid var(--focus-ring-color);
+      outline-offset: -1px;
+    }
+  }
+
+  .react-aria-SelectValue {
+    &[data-placeholder] {
+      font-style: italic;
+      color: var(--text-color-placeholder);
+    }
+  }
+
+  span[aria-hidden] {
+    width: 1.5rem;
+    line-height: 1.375rem;
+    margin-left: 1rem;
+    padding: 1px;
+    background: var(--highlight-background);
+    color: var(--highlight-foreground);
+    forced-color-adjust: none;
+    border-radius: 4px;
+    font-size: 0.857rem;
+  }
+}
+
+.react-aria-Popover[data-trigger="Select"] {
+  min-width: var(--trigger-width);
+
+  .react-aria-ListBox {
+    display: block;
+    width: unset;
+    max-height: inherit;
+    min-height: unset;
+    border: none;
+
+    .react-aria-Header {
+      padding-left: 1.571rem;
+    }
+  }
+
+  .react-aria-ListBoxItem {
+    padding: 0.286rem 0.571rem 0.286rem 1.571rem;
+
+    &[data-focus-visible] {
+      outline: none;
+    }
+
+    &[data-selected] {
+      font-weight: 600;
+      background: unset;
+      color: var(--text-color);
+
+      &::before {
+        content: "✓";
+        content: "✓" / "";
+        alt: " ";
+        position: absolute;
+        top: 4px;
+        left: 4px;
+      }
+    }
+
+    &[data-focused],
+    &[data-pressed] {
+      background: var(--highlight-background);
+      color: var(--highlight-foreground);
+    }
+  }
+}
+
+.react-aria-Button {
+  color: var(--text-color);
+  background: var(--button-background);
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  appearance: none;
+  vertical-align: middle;
+  font-size: 1rem;
+  text-align: center;
+  margin: 0;
+  outline: none;
+  padding: 6px 10px;
+  text-decoration: none;
+
+  &[data-pressed] {
+    box-shadow: inset 0 1px 2px rgb(0 0 0 / 0.1);
+    background: var(--button-background-pressed);
+    border-color: var(--border-color-pressed);
+  }
+
+  &[data-focus-visible] {
+    outline: 2px solid var(--focus-ring-color);
+    outline-offset: -1px;
+  }
+
+  &[data-disabled] {
+    border-color: var(--border-color-disabled);
+    color: var(--text-color-disabled);
+  }
+}
+
+.react-aria-Dialog {
+  outline: none;
+  padding: 30px;
+
+  .react-aria-Heading[slot="title"] {
+    line-height: 1em;
+    margin-top: 0;
+  }
+}
+
+.react-aria-Checkbox {
+  --selected-color: var(--highlight-background);
+  --selected-color-pressed: var(--highlight-background-pressed);
+  --checkmark-color: var(--highlight-foreground);
+
+  display: flex;
+  align-items: center;
+  gap: 0.571rem;
+  font-size: 1.143rem;
+  color: var(--text-color);
+  forced-color-adjust: none;
+
+  .checkbox {
+    width: 1.143rem;
+    height: 1.143rem;
+    border: 2px solid var(--border-color);
+    border-radius: 4px;
+    transition: all 200ms;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  svg {
+    width: 1rem;
+    height: 1rem;
+    fill: none;
+    stroke: var(--checkmark-color);
+    stroke-width: 3px;
+    stroke-dasharray: 22px;
+    stroke-dashoffset: 66;
+    transition: all 200ms;
+  }
+
+  &[data-pressed] .checkbox {
+    border-color: var(--border-color-pressed);
+  }
+
+  &[data-focus-visible] .checkbox {
+    outline: 2px solid var(--focus-ring-color);
+    outline-offset: 2px;
+  }
+
+  &[data-selected],
+  &[data-indeterminate] {
+    .checkbox {
+      border-color: var(--selected-color);
+      background: var(--selected-color);
+    }
+
+    &[data-pressed] .checkbox {
+      border-color: var(--selected-color-pressed);
+      background: var(--selected-color-pressed);
+    }
+
+    svg {
+      stroke-dashoffset: 44;
+    }
+  }
+
+  &[data-indeterminate] {
+    & svg {
+      stroke: none;
+      fill: var(--checkmark-color);
+    }
+  }
+
+  &[data-invalid] {
+    .checkbox {
+      --checkmark-color: var(--gray-50);
+      border-color: var(--invalid-color);
+    }
+
+    &[data-pressed] .checkbox {
+      border-color: var(--invalid-color-pressed);
+    }
+
+    &[data-selected],
+    &[data-indeterminate] {
+      .checkbox {
+        background: var(--invalid-color);
+      }
+
+      &[data-pressed] .checkbox {
+        background: var(--invalid-color-pressed);
+      }
+    }
+  }
+
+  &[data-disabled] {
+    color: var(--text-color-disabled);
+
+    .checkbox {
+      border-color: var(--border-color-disabled);
+    }
+  }
+}
+
+.react-aria-ListBox {
+  display: flex;
+  flex-direction: column;
+  max-height: inherit;
+  overflow: auto;
+  padding: 2px;
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  background: var(--overlay-background);
+  forced-color-adjust: none;
+  outline: none;
+  width: 250px;
+  max-height: 300px;
+  min-height: 100px;
+  box-sizing: border-box;
+
+  &[data-focus-visible] {
+    outline: 2px solid var(--focus-ring-color);
+    outline-offset: -1px;
+  }
+}
+
+.react-aria-ListBoxItem {
+  margin: 2px;
+  padding: 0.286rem 0.571rem;
+  border-radius: 6px;
+  outline: none;
+  cursor: default;
+  color: var(--text-color);
+  font-size: 1.072rem;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+
+  &[data-focus-visible] {
+    outline: 2px solid var(--focus-ring-color);
+    outline-offset: -2px;
+  }
+
+  &[data-selected] {
+    background: var(--highlight-background);
+    color: var(--highlight-foreground);
+
+    &[data-focus-visible] {
+      outline-color: var(--highlight-foreground);
+      outline-offset: -4px;
+    }
+  }
+}
+
+.react-aria-ListBoxItem[href] {
+  text-decoration: none;
+  cursor: pointer;
+  -webkit-touch-callout: none;
+}
+
+.react-aria-ListBox {
+  .react-aria-Section:not(:first-child) {
+    margin-top: 12px;
+  }
+
+  .react-aria-Header {
+    font-size: 1.143rem;
+    font-weight: bold;
+    padding: 0 0.714rem;
+  }
+}
+
+.react-aria-ListBoxItem {
+  [slot="label"] {
+    font-weight: bold;
+  }
+
+  [slot="description"] {
+    font-size: small;
+  }
+}
+
+.react-aria-ListBox[data-orientation="horizontal"],
+.react-aria-ListBox[data-layout="grid"] {
+  flex-direction: row;
+  width: fit-content;
+  max-width: 100%;
+  padding: 4px;
+
+  .react-aria-ListBoxItem {
+    position: relative;
+    margin: 0;
+    padding: 4px;
+
+    & img {
+      object-fit: cover;
+      aspect-ratio: 1/1;
+      max-width: 150px;
+      margin-bottom: 4px;
+      border-radius: 4px;
+      transition: box-shadow 200ms;
+    }
+
+    &[data-hovered] {
+      & img {
+        box-shadow: 0 0 8px rgb(from slateblue r g b / 0.5);
+      }
+    }
+
+    &[data-selected] {
+      background: none;
+      color: inherit;
+
+      & img {
+        box-shadow: 0 0 12px rgb(from slateblue r g b / 0.8);
+      }
+
+      &:after {
+        content: "✓";
+        content: "✓" / "";
+        alt: " ";
+        position: absolute;
+        top: 8px;
+        right: 8px;
+        background: var(--highlight-background);
+        border: 2px solid var(--highlight-foreground);
+        color: var(--highlight-foreground);
+        width: 22px;
+        height: 22px;
+        border-radius: 22px;
+        box-sizing: border-box;
+        font-size: 14px;
+        line-height: 1em;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 0 8px rgb(0 0 0 / 0.5);
+      }
+    }
+  }
+}
+
+.react-aria-ListBox[data-layout="grid"] {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  scrollbar-gutter: stable;
+}
+
+.react-aria-ListBox[data-layout="grid"][data-orientation="horizontal"] {
+  width: 100%;
+  max-width: none;
+  display: grid;
+  grid-auto-flow: column;
+  grid-template-rows: 58px 58px;
+  grid-template-columns: none;
+  grid-auto-columns: 250px;
+  max-height: 200px;
+  gap: 8px;
+
+  .react-aria-ListBoxItem {
+    display: grid;
+    grid-template-areas:
+      "image ."
+      "image title"
+      "image description"
+      "image .";
+    grid-template-columns: auto 1fr;
+    grid-template-rows: 1fr auto auto 1fr;
+    column-gap: 8px;
+
+    & img {
+      width: 50px;
+      height: 50px;
+      grid-area: image;
+      margin-bottom: 0;
+    }
+
+    [slot="label"] {
+      grid-area: title;
+    }
+
+    [slot="description"] {
+      grid-area: description;
+    }
+  }
+}
+
+.react-aria-ListBoxItem {
+  &[data-disabled] {
+    color: var(--text-color-disabled);
+  }
+}
+
+.react-aria-ListBox {
+  &[data-empty] {
+    align-items: center;
+    justify-content: center;
+    font-style: italic;
+  }
+}
+
+.react-aria-ListBoxItem {
+  &[data-dragging] {
+    opacity: 0.6;
+  }
+}
+
+.react-aria-DropIndicator[data-drop-target] {
+  outline: 1px solid var(--highlight-background);
+}
+
+.react-aria-ListBox[data-drop-target] {
+  outline: 2px solid var(--highlight-background);
+  outline-offset: -1px;
+  background: var(--highlight-overlay);
+}
+
+.react-aria-ListBoxItem[data-drop-target] {
+  outline: 2px solid var(--highlight-background);
+  background: var(--highlight-overlay);
+}
+
+.react-aria-DropIndicator[data-drop-target] {
+  outline: 1px solid var(--highlight-background);
+}
+
+.react-aria-Switch {
+  display: flex;
+  align-items: center;
+  gap: 0.571rem;
+  font-size: 1.143rem;
+  color: var(--text-color);
+  forced-color-adjust: none;
+
+  .indicator {
+    width: 2rem;
+    height: 1.143rem;
+    border: 2px solid var(--border-color);
+    background: var(--background-color);
+    border-radius: 1.143rem;
+    transition: all 200ms;
+
+    &:before {
+      content: "";
+      display: block;
+      margin: 0.143rem;
+      width: 0.857rem;
+      height: 0.857rem;
+      background: var(--highlight-background);
+      border-radius: 16px;
+      transition: all 200ms;
+    }
+  }
+
+  &[data-pressed] .indicator {
+    border-color: var(--border-color-pressed);
+
+    &:before {
+      background: var(--highlight-background-pressed);
+    }
+  }
+
+  &[data-selected] {
+    .indicator {
+      border-color: var(--highlight-background);
+      background: var(--highlight-background);
+
+      &:before {
+        background: var(--field-background);
+        transform: translateX(100%);
+      }
+    }
+
+    &[data-pressed] {
+      .indicator {
+        border-color: var(--highlight-background-pressed);
+        background: var(--highlight-background-pressed);
+      }
+    }
+  }
+
+  &[data-focus-visible] .indicator {
+    outline: 2px solid var(--focus-ring-color);
+    outline-offset: 2px;
+  }
+
+  &[data-disabled] {
+    color: var(--text-color-disabled);
+
+    .indicator {
+      border-color: var(--border-color-disabled);
+
+      &:before {
+        background: var(--border-color-disabled);
+      }
+    }
+  }
+}
+
+.react-aria-TextField {
+  display: flex;
+  flex-direction: column;
+  width: fit-content;
+  color: var(--text-color);
+
+  .react-aria-Input,
+  .react-aria-TextArea {
+    padding: 0.286rem;
+    margin: 0;
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    background: var(--field-background);
+    font-size: 1.143rem;
+    color: var(--field-text-color);
+
+    &[data-focused] {
+      outline: 2px solid var(--focus-ring-color);
+      outline-offset: -1px;
+    }
+  }
+
+  .react-aria-Input,
+  .react-aria-TextArea {
+    &[data-invalid] {
+      border-color: var(--invalid-color);
+    }
+  }
+
+  .react-aria-FieldError {
+    font-size: 12px;
+    color: var(--invalid-color);
+  }
+
+  [slot="description"] {
+    font-size: 12px;
+  }
+
+  .react-aria-Input,
+  .react-aria-TextArea {
+    &[data-disabled] {
+      border-color: var(--border-color-disabled);
+      color: var(--text-color-disabled);
+    }
+  }
+}
+
+.react-aria-Popover {
+  --background-color: var(--overlay-background);
+
+  border: 1px solid var(--border-color);
+  box-shadow: 0 8px 20px rgba(0 0 0 / 0.1);
+  border-radius: 6px;
+  background: var(--background-color);
+  color: var(--text-color);
+  outline: none;
+  max-width: 250px;
+  box-sizing: border-box;
+
+  .react-aria-OverlayArrow svg {
+    display: block;
+    fill: var(--background-color);
+    stroke: var(--border-color);
+    stroke-width: 1px;
+  }
+
+  &[data-placement="top"] {
+    --origin: translateY(8px);
+
+    &:has(.react-aria-OverlayArrow) {
+      margin-bottom: 6px;
+    }
+  }
+
+  &[data-placement="bottom"] {
+    --origin: translateY(-8px);
+
+    &:has(.react-aria-OverlayArrow) {
+      margin-top: 6px;
+    }
+
+    .react-aria-OverlayArrow svg {
+      transform: rotate(180deg);
+    }
+  }
+
+  &[data-placement="right"] {
+    --origin: translateX(-8px);
+
+    &:has(.react-aria-OverlayArrow) {
+      margin-left: 6px;
+    }
+
+    .react-aria-OverlayArrow svg {
+      transform: rotate(90deg);
+    }
+  }
+
+  &[data-placement="left"] {
+    --origin: translateX(8px);
+
+    &:has(.react-aria-OverlayArrow) {
+      margin-right: 6px;
+    }
+
+    .react-aria-OverlayArrow svg {
+      transform: rotate(-90deg);
+    }
+  }
+
+  &[data-entering] {
+    animation: popover-slide 200ms;
+  }
+
+  &[data-exiting] {
+    animation: popover-slide 200ms reverse ease-in;
+  }
+}
+
+@keyframes popover-slide {
+  from {
+    transform: var(--origin);
+    opacity: 0;
+  }
+
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}

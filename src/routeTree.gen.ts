@@ -3,13 +3,29 @@
 // Import Routes
 
 import { Route as rootRoute } from './routes/__root'
+import { Route as WorkoutsImport } from './routes/workouts'
+import { Route as ProgramsImport } from './routes/programs'
 import { Route as MuscleGroupsImport } from './routes/muscle-groups'
 import { Route as ExercisesImport } from './routes/exercises'
 import { Route as IndexImport } from './routes/index'
+import { Route as WorkoutNewImport } from './routes/workout/new'
+import { Route as WorkoutIdImport } from './routes/workout/$id'
+import { Route as ProgramNewImport } from './routes/program/new'
+import { Route as ProgramIdImport } from './routes/program/$id'
 import { Route as MuscleGroupIdImport } from './routes/muscle-group/$id'
 import { Route as ExerciseIdImport } from './routes/exercise/$id'
 
 // Create/Update Routes
+
+const WorkoutsRoute = WorkoutsImport.update({
+  path: '/workouts',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const ProgramsRoute = ProgramsImport.update({
+  path: '/programs',
+  getParentRoute: () => rootRoute,
+} as any)
 
 const MuscleGroupsRoute = MuscleGroupsImport.update({
   path: '/muscle-groups',
@@ -23,6 +39,26 @@ const ExercisesRoute = ExercisesImport.update({
 
 const IndexRoute = IndexImport.update({
   path: '/',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const WorkoutNewRoute = WorkoutNewImport.update({
+  path: '/workout/new',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const WorkoutIdRoute = WorkoutIdImport.update({
+  path: '/workout/$id',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const ProgramNewRoute = ProgramNewImport.update({
+  path: '/program/new',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const ProgramIdRoute = ProgramIdImport.update({
+  path: '/program/$id',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -52,12 +88,36 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof MuscleGroupsImport
       parentRoute: typeof rootRoute
     }
+    '/programs': {
+      preLoaderRoute: typeof ProgramsImport
+      parentRoute: typeof rootRoute
+    }
+    '/workouts': {
+      preLoaderRoute: typeof WorkoutsImport
+      parentRoute: typeof rootRoute
+    }
     '/exercise/$id': {
       preLoaderRoute: typeof ExerciseIdImport
       parentRoute: typeof rootRoute
     }
     '/muscle-group/$id': {
       preLoaderRoute: typeof MuscleGroupIdImport
+      parentRoute: typeof rootRoute
+    }
+    '/program/$id': {
+      preLoaderRoute: typeof ProgramIdImport
+      parentRoute: typeof rootRoute
+    }
+    '/program/new': {
+      preLoaderRoute: typeof ProgramNewImport
+      parentRoute: typeof rootRoute
+    }
+    '/workout/$id': {
+      preLoaderRoute: typeof WorkoutIdImport
+      parentRoute: typeof rootRoute
+    }
+    '/workout/new': {
+      preLoaderRoute: typeof WorkoutNewImport
       parentRoute: typeof rootRoute
     }
   }
@@ -69,6 +129,12 @@ export const routeTree = rootRoute.addChildren([
   IndexRoute,
   ExercisesRoute,
   MuscleGroupsRoute,
+  ProgramsRoute,
+  WorkoutsRoute,
   ExerciseIdRoute,
   MuscleGroupIdRoute,
+  ProgramIdRoute,
+  ProgramNewRoute,
+  WorkoutIdRoute,
+  WorkoutNewRoute,
 ])

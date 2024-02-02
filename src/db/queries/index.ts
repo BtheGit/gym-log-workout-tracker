@@ -2,9 +2,166 @@ import { db } from "../db";
 import {
   ExerciseWithMuscleGroupsView,
   MuscleGroupWithExercisesView,
+  ProgramWithWorkoutsView,
+  WorkoutWithExercisesView,
 } from "../constants";
 
-type IExerciseView = {
+export type IProgramView = {
+  program_id: string;
+  program_name: string;
+  program_description: string;
+  program_author: string;
+  workouts: ({ week: string; day: string } & IWorkoutView)[];
+};
+
+export const getPrograms = async () => {
+  const result = await db.exec({
+    sql: `
+      SELECT
+        ${ProgramWithWorkoutsView.cols.program_id},
+        ${ProgramWithWorkoutsView.cols.program_name},
+        ${ProgramWithWorkoutsView.cols.program_description},
+        ${ProgramWithWorkoutsView.cols.program_author},
+        ${ProgramWithWorkoutsView.cols.workouts.name}
+      FROM
+        ${ProgramWithWorkoutsView.name}
+    `,
+  });
+
+  const programs: IProgramView[] = result.map(({ columnNames, row }) =>
+    row.reduce((acc, curr, idx) => {
+      if (columnNames[idx] === ProgramWithWorkoutsView.cols.workouts.name) {
+        curr = JSON.parse(curr);
+        // In order to get programs with and without workouts, we did a left join in the view, which means we will also get an empty workout object with all null values. For simplicities sake, we'll just filter those out.
+        curr = curr.filter((workout) => workout.workout_id !== null);
+      }
+      acc[columnNames[idx]!] = curr;
+      return acc;
+    }, {})
+  );
+
+  return programs;
+};
+
+export const getProgramById = async (id: string) => {
+  const queryResult = await db.exec({
+    sql: `
+      SELECT
+        ${ProgramWithWorkoutsView.cols.program_id},
+        ${ProgramWithWorkoutsView.cols.program_name},
+        ${ProgramWithWorkoutsView.cols.program_description},
+        ${ProgramWithWorkoutsView.cols.program_author},
+        ${ProgramWithWorkoutsView.cols.workouts.name}
+      FROM
+        ${ProgramWithWorkoutsView.name}
+      WHERE
+        ${ProgramWithWorkoutsView.cols.program_id} = ${id}
+    `,
+  });
+
+  const raw = queryResult[0];
+  if (!raw) {
+    return;
+  }
+
+  const { columnNames, row } = raw;
+
+  const program: IProgramView = row.reduce((acc, curr, idx) => {
+    if (columnNames[idx] === ProgramWithWorkoutsView.cols.workouts.name) {
+      curr = JSON.parse(curr);
+      // In order to get programs with and without workouts, we did a left join in the view, which means we will also get an empty workout object with all null values. For simplicities sake, we'll just filter those out.
+      curr = curr.filter((workout) => workout.workout_id !== null);
+    }
+    acc[columnNames[idx]!] = curr;
+    return acc;
+  }, {});
+
+  return program;
+};
+
+export type IWorkoutView = {
+  workout_id: string;
+  workout_name: string;
+  workout_description: string;
+  exercises: {
+    workout_exercise_id: number;
+    exercise_id: string;
+    exercise_name: string;
+    sort_order: number;
+    muscle_groups: {
+      id: string;
+      name: string;
+    }[];
+    sets: {
+      set_id: string;
+      reps: number | null;
+      weight: number | null;
+      time: number | null;
+      distance: number | null;
+      sort_order: number;
+    }[];
+  }[];
+};
+
+export const getWorkouts = async () => {
+  const result = await db.exec({
+    sql: `
+    SELECT
+      ${WorkoutWithExercisesView.cols.workout_id},
+      ${WorkoutWithExercisesView.cols.workout_name},
+      ${WorkoutWithExercisesView.cols.workout_description},
+      ${WorkoutWithExercisesView.cols.exercises.name}
+    FROM
+      ${WorkoutWithExercisesView.name}
+    `,
+  });
+
+  const workouts: IWorkoutView[] = result.map(({ columnNames, row }) =>
+    row.reduce((acc, curr, idx) => {
+      if (columnNames[idx] === WorkoutWithExercisesView.cols.exercises.name) {
+        curr = JSON.parse(curr);
+      }
+      acc[columnNames[idx]!] = curr;
+      return acc;
+    }, {})
+  );
+  return workouts;
+};
+
+export const getWorkoutByID = async (id: string) => {
+  const queryResult = await db.exec({
+    sql: `
+    SELECT
+      ${WorkoutWithExercisesView.cols.workout_id},
+      ${WorkoutWithExercisesView.cols.workout_name},
+      ${WorkoutWithExercisesView.cols.workout_description},
+      ${WorkoutWithExercisesView.cols.exercises.name}
+    FROM
+      ${WorkoutWithExercisesView.name}
+    WHERE
+      ${WorkoutWithExercisesView.cols.workout_id} = ${id}
+    `,
+  });
+
+  const rawWorkout = queryResult[0];
+  if (!rawWorkout) {
+    return;
+  }
+
+  const { columnNames, row } = rawWorkout;
+
+  const workout: IWorkoutView = row.reduce((acc, curr, idx) => {
+    if (columnNames[idx] === WorkoutWithExercisesView.cols.exercises.name) {
+      curr = JSON.parse(curr);
+    }
+    acc[columnNames[idx]!] = curr;
+    return acc;
+  }, {});
+
+  return workout;
+};
+
+export type IExerciseView = {
   exercise_id: string;
   exercise_name: string;
   exercise_description: string;
@@ -96,7 +253,7 @@ export const getExerciseById = async (id: string) => {
   }
 };
 
-type IMuscleGroupWithExercisesView = {
+export type IMuscleGroupWithExercisesView = {
   id: string;
   name: string;
   exercises: { exercise_id: string; exercise_name: string }[];
