@@ -3,10 +3,9 @@ import {
   type WorkoutExerciseSetFormData,
   WorkoutExerciseSetEditor,
 } from "./WorkoutExerciseSetEditor";
-import { useEffect } from "react";
 
 export type WorkoutExerciseFormData = {
-  exercise_id: string;
+  id: string;
   sets: WorkoutExerciseSetFormData[];
 };
 
@@ -20,11 +19,7 @@ export function WorkoutExerciseEditor({ value, setTemplate, updateSetsField }) {
     name: "sets",
   });
   const setsValue = watch("sets");
-  useEffect(() => {
-    updateSetsField(setsValue);
-  }, [setsValue]);
 
-  console.log(setTemplate);
   // Not getting a value.exercise_id until actually updating, that's not ideal. We need to base our set editor off of the input instead of the value TODO:
   return (
     <>
@@ -37,7 +32,12 @@ export function WorkoutExerciseEditor({ value, setTemplate, updateSetsField }) {
                 updateField={(
                   fieldName: "reps" | "weight" | "time" | "distance",
                   value
-                ) => setValue(`sets.${index}.${fieldName}`, value)}
+                ) => {
+                  setValue(`sets.${index}.${fieldName}`, value);
+                  // We cant use useeffect to watch this correctly since it's a mutated value
+                  // https://github.com/react-hook-form/react-hook-form/issues/7068#issuecomment-972942342
+                  updateSetsField(setsValue);
+                }}
               />
             </li>
           ))}
