@@ -1,4 +1,5 @@
 import { useForm, Controller } from "react-hook-form";
+import { inputToNumber } from "../../utils";
 
 export type WorkoutExerciseSetFormData = {
   weight?: number;
@@ -28,7 +29,7 @@ export function WorkoutExerciseSetEditor({ updateField, value }) {
                 value={value}
                 onChange={(e) => {
                   onChange(e.target.value);
-                  updateField("reps", e.target.value);
+                  updateField("reps", inputToNumber(e.target.value));
                 }}
               ></input>
             </div>
@@ -48,7 +49,7 @@ export function WorkoutExerciseSetEditor({ updateField, value }) {
                 value={value}
                 onChange={(e) => {
                   onChange(e.target.value);
-                  updateField("weight", e.target.value);
+                  updateField("weight", inputToNumber(e.target.value));
                 }}
               ></input>
             </div>
@@ -68,7 +69,7 @@ export function WorkoutExerciseSetEditor({ updateField, value }) {
                 value={value}
                 onChange={(e) => {
                   onChange(e.target.value);
-                  updateField("time", e.target.value);
+                  updateField("time", inputToNumber(e.target.value));
                 }}
               ></input>
             </div>
@@ -88,7 +89,7 @@ export function WorkoutExerciseSetEditor({ updateField, value }) {
                 value={value}
                 onChange={(e) => {
                   onChange(e.target.value);
-                  updateField("distance", e.target.value);
+                  updateField("distance", inputToNumber(e.target.value));
                 }}
               ></input>
             </div>
