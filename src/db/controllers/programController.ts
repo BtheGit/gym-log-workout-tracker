@@ -1,5 +1,5 @@
 import { IProgramData } from "../data/programs";
-import { insertProgram } from "../mutations/Program";
+import { insertProgram, updateProgram } from "../mutations/Program";
 import { addWorkout } from "./workoutController";
 
 export async function addProgram(program: IProgramData) {
@@ -12,4 +12,8 @@ export async function addProgram(program: IProgramData) {
   }
 
   return programId;
+}
+
+export async function editProgram(id: string, program: IProgramData) {
+  return await updateProgram(id, program);
 }
