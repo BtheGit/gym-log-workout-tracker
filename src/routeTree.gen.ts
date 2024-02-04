@@ -14,6 +14,8 @@ import { Route as ProgramNewImport } from './routes/program/new'
 import { Route as ProgramIdImport } from './routes/program/$id'
 import { Route as MuscleGroupIdImport } from './routes/muscle-group/$id'
 import { Route as ExerciseIdImport } from './routes/exercise/$id'
+import { Route as ProgramIdIndexImport } from './routes/program/$id/index'
+import { Route as ProgramIdEditImport } from './routes/program/$id/edit'
 
 // Create/Update Routes
 
@@ -72,6 +74,16 @@ const ExerciseIdRoute = ExerciseIdImport.update({
   getParentRoute: () => rootRoute,
 } as any)
 
+const ProgramIdIndexRoute = ProgramIdIndexImport.update({
+  path: '/',
+  getParentRoute: () => ProgramIdRoute,
+} as any)
+
+const ProgramIdEditRoute = ProgramIdEditImport.update({
+  path: '/edit',
+  getParentRoute: () => ProgramIdRoute,
+} as any)
+
 // Populate the FileRoutesByPath interface
 
 declare module '@tanstack/react-router' {
@@ -120,6 +132,14 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof WorkoutNewImport
       parentRoute: typeof rootRoute
     }
+    '/program/$id/edit': {
+      preLoaderRoute: typeof ProgramIdEditImport
+      parentRoute: typeof ProgramIdImport
+    }
+    '/program/$id/': {
+      preLoaderRoute: typeof ProgramIdIndexImport
+      parentRoute: typeof ProgramIdImport
+    }
   }
 }
 
@@ -133,7 +153,7 @@ export const routeTree = rootRoute.addChildren([
   WorkoutsRoute,
   ExerciseIdRoute,
   MuscleGroupIdRoute,
-  ProgramIdRoute,
+  ProgramIdRoute.addChildren([ProgramIdEditRoute, ProgramIdIndexRoute]),
   ProgramNewRoute,
   WorkoutIdRoute,
   WorkoutNewRoute,
