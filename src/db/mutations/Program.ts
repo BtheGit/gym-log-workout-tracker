@@ -23,3 +23,13 @@ export const insertProgram = async (program: IProgramData) => {
 
   return programId;
 };
+
+export const updateProgram = async (id: string, program: IProgramData) => {
+  await db.exec({
+    sql: `UPDATE ${ProgramTable.name} SET 
+      ${ProgramTable.cols.name} = '${program.name}',
+      ${ProgramTable.cols.description} = '${program.description}',
+      ${ProgramTable.cols.author} = '${program.author}'
+      WHERE ${ProgramTable.cols.id} = ${id}`,
+  });
+};

@@ -7,7 +7,7 @@ import "./app.css";
 import { routeTree } from "./routeTree.gen";
 
 // Create a new router instance
-const router = new Router({ routeTree });
+const router = new Router({ routeTree, defaultGcTime: 0 });
 
 // Register the router instance for type safety
 declare module "@tanstack/react-router" {

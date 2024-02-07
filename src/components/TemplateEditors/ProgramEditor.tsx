@@ -1,7 +1,11 @@
 import { useForm } from "react-hook-form";
 import "./ProgramEditor.css";
-import { addProgram } from "../../db/controllers/programController";
+import {
+  addProgram,
+  editProgram,
+} from "../../db/controllers/programController";
 import { useNavigate } from "@tanstack/react-router";
+import { IProgramView } from "../../db/queries";
 
 // Program Editor
 // The program editor will wrap a multi component tree that will involve nested dynamic forms.
@@ -22,12 +26,30 @@ type ProgramFormData = {
   // workouts: WorkoutFormData[];
 };
 
-export function ProgramEditor() {
+export function ProgramEditor({ program }: { program?: IProgramView }) {
   const navigate = useNavigate({ from: "/program/new" });
-  const { register, handleSubmit } = useForm<ProgramFormData>();
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    reset,
+  } = useForm<ProgramFormData>({
+    defaultValues: {
+      name: program?.program_name,
+      description: program?.program_description,
+      author: program?.program_author,
+    },
+  });
 
   const onSubmit = handleSubmit(async (data) => {
-    const programId = await addProgram(data);
+    let programId = program?.program_id;
+    if (programId) {
+      await editProgram(programId, data);
+    } else {
+      programId = await addProgram(data);
+    }
+    reset();
+
     // TODO: Investigate. Maybe can replace history with the api such that a back action would go to programs and not new program.
     navigate({ to: "/program/$id", params: { id: programId } });
   });
@@ -37,7 +59,16 @@ export function ProgramEditor() {
         <div>
           <div className="form-field">
             <label>Name</label>
-            <input {...register("name", { required: true, maxLength: 250 })} />
+            <input
+              {...register("name", {
+                required: { value: true, message: "Field is required" },
+                maxLength: {
+                  value: 250,
+                  message: "Name cannot be longer than 250 characters",
+                },
+              })}
+            />
+            {errors.name?.message && <p> {errors.name.message}</p>}
           </div>
           <div className="form-field">
             <label>Author</label>
@@ -49,7 +80,7 @@ export function ProgramEditor() {
           </div>
         </div>
         <button type="submit" className="button--save">
-          Create Program
+          Save
         </button>
       </form>
     </>
