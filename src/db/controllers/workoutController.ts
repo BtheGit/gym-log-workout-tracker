@@ -6,7 +6,7 @@ import { IWorkoutData } from "../data/workouts";
 import { IProgramWorkoutData } from "../data/programs";
 
 // TODO: Error catch and roll back changes if at all possible?
-export async function addWorkout(workout: IWorkoutData, programId?: number) {
+export async function addWorkout(workout: IWorkoutData, programId?: string) {
   if (!workout?.exercises?.length) {
     throw new Error("Workouts must contain at least one exercise");
   }
@@ -52,4 +52,8 @@ export async function addWorkout(workout: IWorkoutData, programId?: number) {
   }
 
   return workoutId;
+}
+
+export async function editWorkout(workoutId: string, workout: IWorkoutData) {
+  // Update existing workout.
 }

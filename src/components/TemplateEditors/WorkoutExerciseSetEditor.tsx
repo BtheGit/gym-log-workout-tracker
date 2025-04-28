@@ -16,7 +16,7 @@ export function WorkoutExerciseSetEditor({ updateField, value }) {
   });
   return (
     <>
-      {value.hasOwnProperty("reps") && (
+      {value?.reps != undefined && (
         <Controller
           control={control}
           name="reps"
@@ -36,7 +36,7 @@ export function WorkoutExerciseSetEditor({ updateField, value }) {
           )}
         />
       )}
-      {value.hasOwnProperty("weight") && (
+      {value?.weight != undefined && (
         <Controller
           control={control}
           name="weight"
@@ -56,7 +56,7 @@ export function WorkoutExerciseSetEditor({ updateField, value }) {
           )}
         />
       )}
-      {value.hasOwnProperty("time") && (
+      {value?.time != undefined && (
         <Controller
           control={control}
           name="time"
@@ -76,7 +76,7 @@ export function WorkoutExerciseSetEditor({ updateField, value }) {
           )}
         />
       )}
-      {value.hasOwnProperty("distance") && (
+      {value?.distance != undefined && (
         <Controller
           control={control}
           name="distance"

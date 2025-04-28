@@ -14,6 +14,7 @@ import { useExercises } from "../../db/hooks";
 import { WorkoutExerciseSetFormData } from "./WorkoutExerciseSetEditor";
 import { addWorkout } from "../../db/controllers/workoutController";
 import { useNavigate } from "@tanstack/react-router";
+import { IWorkoutView } from "../../db/queries";
 
 export type WorkoutFormData = {
   // week: number;
@@ -23,8 +24,15 @@ export type WorkoutFormData = {
   exercises: WorkoutExerciseFormData[];
 };
 
-export function WorkoutEditor({ programId }) {
-  const navigate = useNavigate({ from: "/workout/new" });
+export function WorkoutEditor({
+  programId,
+  workout,
+}: {
+  programId?: string;
+  workout?: IWorkoutView;
+}) {
+  console.log(workout);
+  const navigate = useNavigate();
   const {
     register,
     handleSubmit,
@@ -32,7 +40,26 @@ export function WorkoutEditor({ programId }) {
     setValue,
     reset,
     formState: { errors },
-  } = useForm<WorkoutFormData>();
+  } = useForm<WorkoutFormData>({
+    defaultValues: {
+      name: workout?.workout_name ?? "",
+      description: workout?.workout_description ?? "",
+      exercises: workout?.exercises.map((exercise) => ({
+        id: exercise.exercise_id,
+        // TODO: Use sort order
+        sets:
+          exercise?.sets.map(
+            (set) =>
+              ({
+                weight: set.weight,
+                reps: set.reps,
+                time: set.time,
+                distance: set.distance,
+              }) as WorkoutExerciseSetFormData
+          ) ?? [],
+      })),
+    },
+  });
   const { fields, append } = useFieldArray({
     control,
     name: "exercises",

@@ -24,3 +24,8 @@ export const insertWorkout = async (workout: IWorkoutData) => {
 
   return workoutId;
 };
+
+export const updateWorkout = async (
+  workoutId: string,
+  workout: IWorkoutData
+) => {};
